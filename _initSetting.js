@@ -1,0 +1,39 @@
+
+// app.js 실행했을 때, dotenv 파일을 수행하고 시작하므로
+// 이후 app.js 에서 다른 파일을 참조할 때, .env 환경변수에 접근할 수 있다.
+
+//############################################################
+// oracledb 모듈에 대한 기본 설정을 수행함.
+const oracledb = require('oracledb');
+oracledb.initOracleClient({ libDir: process.env.ORACLEDB_INITORACLECLIENT });
+oracledb.autoCommit = true;
+
+//############################################################
+// app 초기설정
+const express = require('express');
+const path = require('path')
+const bodyParser = require('body-parser')
+const session = require('express-session');
+
+// express 객체 생성
+app = express();
+
+// 뷰엔진 적용 : html로 개발한 페이지는 ejs로 변환하기 쉬워서 ejs 사용.
+app.set('view engine', 'ejs');
+
+// 웬서버에서 root 폴더를 설정. 파일 리소스 라우팅 해주기
+app.use('/', express.static(path.join(__dirname, 'resources')));
+
+// bodyParser 없으면 req.body를 접근할 수 없다.
+// 이후에 라우터에서 다음과 같은 방식으로 변수 받아오려고 미들웨어 사용
+// const { title, content } = req.body;
+app.use(bodyParser.urlencoded({extended:false}));
+
+// express-session 미들웨어 설정
+app.use(session({
+    secret: process.env.SESSION_SECRET_KEY, // 세션을 암호화하기 위한 임의의 키
+    resave: false,
+    saveUninitialized: true,
+}));
+
+module.exports = app

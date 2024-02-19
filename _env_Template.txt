@@ -1,0 +1,14 @@
+# Ctrl+Shift+U : 선택영역 대/소 문자로 변환
+# DB_CONFIG={"user":"hr","password":"hr","connectString":"localhost:1521/xe","externalAuth":false}
+
+# DB 연결
+DB_USER=
+DB_PASSWORD=
+DB_CONNECT_STRING=
+DB_EXTERNAL_AUTH=
+
+# DB 클라이언트
+ORACLEDB_INITORACLECLIENT=
+
+# 세션정보
+SESSION_SECRET_KEY=
