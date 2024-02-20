@@ -12,3 +12,4 @@ npm install oracledb dotenv # oracle 연결
 npm install bcryptjs passport # 보안관련
 ```
 
+다운로드 완료
