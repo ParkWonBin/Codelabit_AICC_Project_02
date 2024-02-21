@@ -28,5 +28,13 @@ async function selectDatabase() {
 
     //결과 보기
     console.log(result.rows[0]);
+
+    // 테이블 보기
+    let rsult2 = await connection.execute(
+        `SELECT user_id, user_name FROM users WHERE ROWNUM <= 5`
+    )
+    console.table(rsult2.rows)
+
+    // 연결해제
     await connection.close();
 }
