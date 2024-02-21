@@ -19,7 +19,7 @@ async function selectDatabase() {
     const connection = await oracledb.getConnection(dbConfig);
 
     //쿼리 생성
-    const sql_string = "SELECT COUNT(*) FROM users"
+    const sql_string = "SELECT COUNT(*) as count FROM users"
     const binds = {};
     const options = {outFormat: oracledb.OUT_FORMAT_OBJECT};
 
@@ -28,6 +28,7 @@ async function selectDatabase() {
 
     //결과 보기
     console.log(result.rows[0]);
+    console.log(result.rows[0].count);
 
     // 테이블 보기
     let rsult2 = await connection.execute(
