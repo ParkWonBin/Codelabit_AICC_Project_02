@@ -1,0 +1,36 @@
+.slider {
+    position: relative;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.slider {
+    display: flex;
+    width: 100%
+}
+
+.slider img {
+    width: 250px;
+    display: inline-block;
+}
+
+.slider img.active {
+    display: inline-block;
+}
+
+button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.prev {
+    left: 0;
+}
+
+.next {
+    right: 0;
+}
