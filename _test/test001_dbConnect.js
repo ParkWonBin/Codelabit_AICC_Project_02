@@ -1,4 +1,7 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' })
+console.log("IP : " + process.env.DB_CONNECT_STRING)
+console.log("ID : " + process.env.DB_USER)
+console.log("연결예시 :")
 
 const oracledb = require('oracledb');
 oracledb.initOracleClient({ libDir: process.env.ORACLEDB_INITORACLECLIENT });
