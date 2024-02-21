@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            margin:0;
+            padding:0;
+        }
+
+        #backgroudimg {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            /* 이미지 비율을 유지하면서 영역을 채움 */
+            /*object-fit: cover;*/
+        }
+
+        #upperMapContainer{
+            height: 500px;
+            width: 100%;
+            position: relative;
+
+        }
+
+        .floatingImage{
+            position: absolute;
+            width: 20%;
+        }
+</style>
+</head>
+<body>
+<!--지역에 따른-->
+<img id="backgroudimg" src="images/map_001.png"/>
+<div id="upperMapContainer">
+
+    <img class="floatingImage" style="top:10vh;left:10vw" src="../exer/images/image1.jpg" >
+    <img class="floatingImage" style="top:30vh;left:30vw" src="../exer/images/image2.jpg" >
+    <img class="floatingImage" style="top:50vh;left:50vw" src="../exer/images/image3.jpg" >
+</div>
+
+</body>
+</html>
