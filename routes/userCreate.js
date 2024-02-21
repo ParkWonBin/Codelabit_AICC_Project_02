@@ -2,8 +2,6 @@ const express = require('express');
 const path = require('path')
 const oracledb = require("oracledb");
 const dbConfig = require("../_dbConfig");
-// const oracledb = require('oracledb');
-// const dbConfig = require('../_dbConfig');
 
 const router = express.Router();
 
@@ -44,25 +42,24 @@ router.post('/', async (req, res) => {
 async function createUser(userId, userPw, userName){
     let connection;
     try {
-        // 1. DB에 연결합니다. (연결정보는 dbConfig 사용)
-        // DB 네트워크 상태가 안좋으면 connection 만드는 데부터 에러나므로 Try 내부에 넣음.
+        // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
+
+       // 4.1. DB에 연결합니다. (연결정보는 dbConfig 사용)
         connection = await oracledb.getConnection(dbConfig);
 
-        // 2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        // sql 쿼리 만들기
+        // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
         const sql_query = 'INSERT INTO users (user_id, user_pw, user_name) VALUES (:userId, :userPw, :userName)'
         const result =  await connection.execute(sql_query, {userId, userPw, userName});
 
-        // 3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
-        // 결과 있으면 리턴값 만들어 리턴하기
+        // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
         console.log(result)
         return "성공";
     } catch (error) {
 
-        // 1. 어떤 에러가 발생했는지 서버에 기록.
+        // 4.4. 에러가 발생하면 어떤 에러인지 서버에 기록.
         console.error('오류 발생:', error.message);
 
-        // 2. 에러 메시지를 통해 어떤 상황에서 어떻게 대처할지를 판단.
+        // 4.5. 에러 메시지를 통해 어떤 상황에서 어떻게 대처할지를 판단.
         if(error.message.includes("unique constraint")){
             // 2.1. 제약조건 때문에 에러가 난 케이스
             // 아이디나 닉네임 중복이 돼서 가입이 실패한 경우
@@ -75,7 +72,7 @@ async function createUser(userId, userPw, userName){
         }
 
     } finally {
-        // 1. 연결정보 남아있으면 close
+        // DB 연결 해제(try에서 return 하면, finally에 있는 코드 수행 후 return 됨)
         if (connection) {
             await connection.close();
         }
