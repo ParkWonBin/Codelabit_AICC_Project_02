@@ -38,7 +38,7 @@ async function varifyID(userId,userPw){
 
         // sql 쿼리 만들기
         connection = await oracledb.getConnection(dbConfig);
-        const sql_query = 'select * from users where user_id = :userId and user_pw = :userPw';
+        const sql_query = 'SELECT * FROM users WHERE user_id = :userId AND user_pw = :userPw';
         const result =  await connection.execute(sql_query, {userId, userPw});
 
         // 조회 결과에 행이 있으면 리턴하기
