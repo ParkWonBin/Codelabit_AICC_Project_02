@@ -10,13 +10,11 @@ router.get('/', async (req, res) => {
     const result = await customFunc();
 
     console.log(result)
-
-    res.render('map',{
-        'x':[result[0][1],result[1][1],result[2][1]],
-        'y':[result[0][2],result[1][2],result[2][2]],
-        'p':[result[0][0],result[1][0],result[2][0]]
-    })
-    // res.sendFile(path.join(__dirname,'/../resources/xxx.html'))
+    const srcPath = result.map(row =>row[0]);
+    const pos_x = result.map(row =>row[1]);
+    const pos_y = result.map(row =>row[2]);
+    console.log(srcPath)
+    res.render('map',{ srcPath, pos_x,pos_y })
 });
 
 router.post('/', async (req, res) => {
@@ -40,7 +38,7 @@ async function customFunc(){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'SELECT * from imagedata';
+        const sql_string =  'SELECT image_path, x_position, y_position from imagedata';
         const result = await connection.execute( sql_string );
         // console.log(result)
 

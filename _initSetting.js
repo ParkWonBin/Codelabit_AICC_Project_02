@@ -29,6 +29,9 @@ app.use('/', express.static(path.join(__dirname, 'resources')));
 // const { title, content } = req.body;
 app.use(bodyParser.urlencoded({extended:false}));
 
+// JSON 형태의 요청 본문을 파싱하기 위해 express.json() 미들웨어를 사용합니다.
+app.use(express.json());
+
 // express-session 미들웨어 설정
 app.use(session({
     secret: process.env.SESSION_SECRET_KEY, // 세션을 암호화하기 위한 임의의 키

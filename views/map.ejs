@@ -3,40 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <style>
-        body{
-            margin:0;
-            padding:0;
-        }
-
-        #backgroudimg {
-            position: absolute;
-            width: 100%;
-            height: 100vh;
-            /* 이미지 비율을 유지하면서 영역을 채움 */
-            /*object-fit: cover;*/
-        }
-
-        #upperMapContainer{
-            height: 500px;
-            width: 100%;
-            position: relative;
-
-        }
-
-        .floatingImage{
-            position: absolute;
-            width: 20%;
-        }
-</style>
+    <link rel="stylesheet" href="./css/map.css">
+    <link rel="stylesheet" href="./css/dragdrop.css">
+    <script src="./js/dragdrop.js"></script>
 </head>
 <body>
 <!--지역에 따른-->
-<img id="backgroudimg" src="images/map_001.png"/>
-<div id="upperMapContainer">
-    <img class="floatingImage" style="top:<%=x[0] %>vh;left:<%=y[0] %>vw" src="<%=p[0] %>" >
-    <img class="floatingImage" style="top:<%=x[1] %>vh;left:<%=y[1] %>vw" src="<%=p[1] %>" >
-    <img class="floatingImage" style="top:<%=x[2] %>vh;left:<%=y[2] %>vw" src="<%=p[2] %>" >
+<div id="MapContainer" class="drop-area">
+    <% for(let i = 0; i < srcPath.length; i++){ %>
+        <div class="dragable" style="top:<%= pos_y[i] %>vh;left:<%= pos_x[i] %>vw">
+            <img src="<%= srcPath[i] %>" >
+        </div>
+    <% } %>
 </div>
 
 </body>
