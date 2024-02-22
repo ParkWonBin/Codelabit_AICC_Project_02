@@ -1,0 +1,13 @@
+#drop-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    width: 300px;
+    height: 200px;
+    text-align: center;
+}
+img {
+    /* 이미지의 초기 너비를 % 대신 px 단위로 설정해야 드래그 시 위치가 더 정확해집니다. */
+    max-width: 100px; /* 예시 너비, 적절히 조정해주세요. */
+    margin-top: 10px;
+    position: absolute; /* 초기에 absolute로 설정하여 드랍 영역 외부에서도 드래그 가능하게 함 */
+}
