@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        #backgroudimg{
+            position: absolute;
+            width: 100%;
+            height: 80vh;
+        }
+        #upperMapContainer {
+            height:60vh;
+            width: 100vw;
+            position: relative;
+        }
+        #lowerMapContainer{
+            height: 40vh;
+            background-color: #d9aeae;: ;
+        }
+        .floatingImage{
+            position: absolute;
+            width: 10%;
+
+              }
+  </style>
+<body>
+<img id ="backgroudimg" src ="images/bak.png">
+<div id ="upperMapContainer">
+    <img class="floatingImage" style ="top:<%= x[0]%>vh;left:<%= y[0] %>vw" src="<%= p[0]%>">
+    <img class="floatingImage" style ="top:<%= x[1]%>vh;left:<%= y[1]%>vw" src=" <%= p[1]%>">
+    <img class="floatingImage" style ="top:<%= x[2]%>vh;left:<%= y[2]%>vw" src=" <%= p[2]%>">
+</div>
+
+<div id="lowerMapContainer">
+         </div>
+</body>
+
+</html>
