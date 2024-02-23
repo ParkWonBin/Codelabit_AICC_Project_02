@@ -27,7 +27,23 @@
             width: 10%;
 
               }
-  </style>
+
+
+        button {
+            display: inline-block;
+            background-color: #c3d9ae;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+
+    </style>
 <body>
 <img id ="backgroudimg" src ="images/bak.png">
 <div id ="upperMapContainer">
@@ -35,7 +51,7 @@
     <img class="floatingImage" style ="top:<%= x[1]%>vh;left:<%= y[1]%>vw" src=" <%= p[1]%>">
     <img class="floatingImage" style ="top:<%= x[2]%>vh;left:<%= y[2]%>vw" src=" <%= p[2]%>">
 </div>
-
+<a href="/map2/<%=imagedata.img_name%>" class="button">삭제</a>
 <div id="lowerMapContainer">
          </div>
 </body>

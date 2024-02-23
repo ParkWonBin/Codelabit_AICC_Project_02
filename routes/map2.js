@@ -19,8 +19,45 @@ router.get('/', async (req, res) => {
 
     // res.sendFile(path.join(__dirname,'/../resources/xxx.html'))
 });
+router.get('/:img_name', async (req, res) => {
+    // 로그인 여부 확인
+    if (!req.session.loggedIn) {
+        return res.redirect('/login'); // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
+    }
+    const image_name = req.params.img_name;
 
-router.post('/', async (req, res) => {
+    let  conn ;
+    try {
+        conn  = await oracledb.getConnection(dbConfig);
+
+        // 게시글 삭제
+        await conn.execute(
+            `DELETE FROM imagedata WHERE image_name = :image_name`,
+            [image_name]
+        );
+
+        // 변경 사항 커밋
+        await conn.commit();
+
+        // 삭제 후 게시판 메인 페이지로 리다이렉트
+        res.redirect(`/map?id=${userId}&username=${userName}`);
+    } catch (err) {
+        console.error('게시글 삭제 중 오류 발생:', err);
+        res.status(500).send('게시글 삭제 중 오류가 발생했습니다.');
+    } finally {
+        if (conn) {
+            try {
+                await conn.close();
+            } catch (err) {
+                console.error('오라클 연결 종료 중 오류 발생:', err);
+            }
+        }
+    }
+
+
+
+});
+   router.post('/', async (req, res) => {
     // 1. post 로 요청받으면, 데이터를 가져오는게 시작. (아래는 예시)
     // const{ a,b,c } = req.body
 
@@ -67,6 +104,9 @@ async function customFunc(){
         }
     }
 }
+
+
+
 
 
 module.exports = router;
