@@ -24,55 +24,11 @@ SELECT * FROM comments;
 
 
 --- POSTS 60개의 더미 게시글 생성
-DECLARE
-a_no NUMBER;
-  p_id NUMBER;
 BEGIN
-  -- 변수를 한 번 설정하고 반복문 내에서 사용
-  a_no := ROUND(DBMS_RANDOM.VALUE(1, 3));
-
 FOR i IN 1..60 LOOP
-    -- 루프의 각 반복에서 시퀀스 값 할당
-SELECT post_seq.NEXTVAL INTO p_id FROM dual;
 
-INSERT INTO posts (post_id, title, content, author_no)
-VALUES (p_id, '제목 ' || p_id, '테스트 내용 ' || p_id, a_no);
-END LOOP;
-COMMIT;
-END;
-/
+  INSERT INTO bulletin (post_id, writer_id, title, content) VALUES (bulletin_seq.NEXTVAL,'test','게시글 '||i, '내용 '||i);
 
---- REVIEWS 30개의 더미 댓글 생성
-DECLARE
-a_no NUMBER;
-    i_id NUMBER;
-BEGIN
-  -- 변수를 한 번 설정하고 반복문 내에서 사용
-SELECT image_seq.CURRVAL INTO i_id FROM dual;
-
-FOR i IN 1..10 LOOP
-    -- 루프의 각 반복에서 값 할당
-    a_no := ROUND(DBMS_RANDOM.VALUE(1, 3));
-INSERT INTO reviews (review_id, image_id, author_no, content)
-VALUES (reviews_seq.NEXTVAL, i_id, a_no, '리뷰 '||i_id);
-END LOOP;
-COMMIT;
-END;
-/
-
--- 예시댓글 생성
-DECLARE
-a_no NUMBER;
-  p_id NUMBER;
-BEGIN
-  -- 변수를 한 번 설정하고 반복문 내에서 사용
-SELECT post_seq.CURRVAL INTO p_id FROM dual;
-
-FOR i IN 1..10 LOOP
-    -- 루프의 각 반복에서 값 할당
-    a_no := ROUND(DBMS_RANDOM.VALUE(1, 3));
-INSERT INTO comments (comment_id, post_id, author_no, content)
-VALUES (comments_seq.NEXTVAL, p_id, a_no, '댓글 '||p_id);
 END LOOP;
 COMMIT;
 END;

@@ -42,7 +42,6 @@ CREATE TABLE hotspot (
   FOREIGN KEY (Auther_id) REFERENCES member(member_id) -- member 테이블의 member_id을 참조하는 외래 키
 );
 
-
 CREATE SEQUENCE hotspot_seq
     START WITH 1
     INCREMENT BY 1
@@ -60,7 +59,6 @@ CREATE TABLE bulletin (
   PRIMARY KEY (post_id), -- 여기에 추가
   FOREIGN KEY (writer_id) REFERENCES member(member_id) 
 );
-
 
 CREATE SEQUENCE bulletin_seq
     START WITH 1
@@ -113,4 +111,17 @@ INSERT INTO comments (comment_id, post_id, writer_id, content) VALUES (comments_
 INSERT INTO comments (comment_id, post_id, writer_id, content) VALUES (comments_seq.NEXTVAL,bulletin_seq.CURRVAL,'user2', '내용3');
 SELECT * FROM comments;
 ------------------------------------------
+
+--- POSTS 60개의 더미 게시글 생성
+BEGIN
+FOR i IN 1..60 LOOP
+
+  INSERT INTO bulletin (post_id, writer_id, title, content) VALUES (bulletin_seq.NEXTVAL,'test','게시글 '||i, '내용 '||i);
+
+END LOOP;
+COMMIT;
+END;
+/
+
+-----------------------------------
 COMMIT;
