@@ -3,7 +3,7 @@ require('dotenv').config();
 
 // 세팅된 웹서버 가져오기
 const app = require('./_initSetting')
-const port = 3000;
+const port = 3001;
 
 // 라우팅 함수를 미들웨어(Middleware)로 처리
 app.use('/', require('./routes/index'));
