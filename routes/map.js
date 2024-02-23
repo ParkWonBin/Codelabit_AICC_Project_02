@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     const result = await customFunc();
 
     console.log(result)
-    const srcPath = result.map(row =>row[0]);
+    const srcPath = result.map(row =>'/images/upload/'+row[0]);
     const pos_x = result.map(row =>row[1]);
     const pos_y = result.map(row =>row[2]);
     console.log(srcPath)

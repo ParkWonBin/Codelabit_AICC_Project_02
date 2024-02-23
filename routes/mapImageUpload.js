@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         // 날짜 형식으로 파일 이름 설정
-        const filename = moment().format('YYYYMMDD_HHmmss') + path.extname(file.originalname)
+        const filename = moment().format('YYYYMMDD_HHmmss_ms') + path.extname(file.originalname)
         cb(null, filename);
     }
 });
@@ -35,7 +35,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 
     // db에 넣을 데이터
     const data = {
-        fileName: `/images/upload/${req.file.filename}`,
+        fileName: req.file.filename,
         top: req.body.top.replace('vh', ''),
         left: req.body.left.replace('vw', '')
     };
@@ -58,7 +58,7 @@ async function insertImageToDB(data){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'INSERT INTO ImageData (image_path, x_position, y_position) VALUES (:fileName, :left, :top)'
+        const sql_string =  'INSERT INTO ImageData (image_id, image_path, x_position, y_position) VALUES (image_seq.NEXTVAL, :fileName, :left, :top)'
         const result = await connection.execute( sql_string,data );
 
         // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
