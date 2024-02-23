@@ -12,61 +12,15 @@ router.get('/', async (req, res) => {
   // console.log(result)
     res.render('map2', {
         'x':  [result[0][1],result[1][1],result[2][1]],
-        'y' : [result[0][1],result[1][2],result[2][2]],
-        'p' : [result[0][0],result[1][0],result[2][0]]
+        'y' : [result[0][2],result[1][2],result[2][2]],
+        'p' : [result[0][0],result[1][0],result[2][0]],
+        'n' : [result[0][4],result[1][4],result[2][4]]
     })
     //앞 사진123,뒤 값위치  x: result 배열의 각 요소의 두 번째 요소(인덱스 1)를 추출하여 새로운 배열을 만듭니다.
 
     // res.sendFile(path.join(__dirname,'/../resources/xxx.html'))
 });
-router.get('/:img_name', async (req, res) => {
-    // 로그인 여부 확인
-    if (!req.session.loggedIn) {
-        return res.redirect('/login'); // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
-    }
-    const image_name = req.params.img_name;
 
-    let  conn ;
-    try {
-        conn  = await oracledb.getConnection(dbConfig);
-
-        // 게시글 삭제
-        await conn.execute(
-            `DELETE FROM imagedata WHERE image_name = :image_name`,
-            [image_name]
-        );
-
-        // 변경 사항 커밋
-        await conn.commit();
-
-        // 삭제 후 게시판 메인 페이지로 리다이렉트
-        res.redirect(`/map?id=${userId}&username=${userName}`);
-    } catch (err) {
-        console.error('게시글 삭제 중 오류 발생:', err);
-        res.status(500).send('게시글 삭제 중 오류가 발생했습니다.');
-    } finally {
-        if (conn) {
-            try {
-                await conn.close();
-            } catch (err) {
-                console.error('오라클 연결 종료 중 오류 발생:', err);
-            }
-        }
-    }
-
-
-
-});
-   router.post('/', async (req, res) => {
-    // 1. post 로 요청받으면, 데이터를 가져오는게 시작. (아래는 예시)
-    // const{ a,b,c } = req.body
-
-    // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리
-    // const result = customFunc()
-
-    // 3. DB 요청 결과를 통해 어떤 화면과 연결시킬지 판단 및 결정.
-    // res.render('', {})
-});
 
 // 4. DB 연결과 관련된 부분은 함수로 분리해서 따로 관리합니다.
 async function customFunc(){
