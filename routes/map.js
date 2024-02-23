@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
     // 3. DB 요청 결과를 통해 어떤 화면과 연결시킬지 판단 및 결정.
     // res.render('', {})
 });
-
+const getImgSrc ='imgag.png'
 // 4. DB 연결과 관련된 부분은 함수로 분리해서 따로 관리합니다.
 async function customFunc(){
     let connection;
