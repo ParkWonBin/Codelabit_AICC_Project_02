@@ -6,12 +6,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
     let offsetY = 0; // 마우스 클릭 위치와 이미지의 y 위치 차이
 
     function act_start(e) {
-        const dragableElement = e.target.closest('.dragable'); // 클릭된 요소에서 가장 가까운 .dragable 요소를 찾습니다.
-        if (dragableElement) {
-            selectedImg = dragableElement; // dragable 클래스를 가진 div를 선택합니다.
+        const draggableElement = e.target.closest('.draggable'); // 클릭된 요소에서 가장 가까운 .draggable 요소를 찾습니다.
+        if (draggableElement) {
+            selectedImg = draggableElement; // draggable 클래스를 가진 div를 선택합니다.
             selectedImg.style.zIndex = 1000; // 선택된 요소를 최상위로
             // 하이라이트 이미지
-            dragableElement.getElementsByTagName('img')[0].classList.add('selectedImg');
+            draggableElement.getElementsByTagName('img')[0].classList.add('selectedImg');
 
             const imgRect = selectedImg.getBoundingClientRect();
 
