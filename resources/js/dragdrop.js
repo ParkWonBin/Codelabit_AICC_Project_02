@@ -1,37 +1,3 @@
-// 서버로 이미지 전송하는 함수
-function sendImageDataToServer(file, left, top) {
-    // alert('test')
-    const formData = new FormData();
-    formData.append('image', file); // 'image'는 서버에서 기대하는 필드명입니다.
-    formData.append('left', left);
-    formData.append('top', top);
-
-    fetch('/MapImageUpload', {
-        method: 'POST',
-        body: formData // FormData는 Content-Type을 자동으로 설정합니다.
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); // 서버로부터 응답을 JSON 형태로 받습니다.
-        })
-        .then(data => {
-            console.log('Response data:', data); // 서버로부터 받은 데이터를 콘솔에 출력합니다.
-            // 서버로부터의 응답에 따라 조건부 로직을 수행합니다.
-            if (data.status === '성공') {
-                console.log('새로고침 시도');
-                window.location.reload(); // 페이지를 새로고침합니다.
-            } else {
-                console.log('응답 처리 실패');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error); // 에러 처리
-        });
-}
-////////////////////////////////////////////////////////
-
 document.addEventListener('DOMContentLoaded', function() {
     // 1. db에서 가져온 이미지 초기 세팅
     // 이거 안하면 이미지 드래그 할 때마다 dragdrop한 것 처럼 인식함
@@ -131,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         // 이제 sendImageDataToServer 함수를 호출하여 이미지 데이터와 위치 정보를 전송합니다.
                         console.log('이미지 등록 처리');
-                        sendImageDataToServer(file, left, top);
+                        sendImageDataToServer(file, left, top, this);
                     });
                 }
             };

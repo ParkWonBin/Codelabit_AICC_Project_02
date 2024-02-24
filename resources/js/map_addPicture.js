@@ -1,9 +1,5 @@
 document.addEventListener('DOMContentLoaded', (event) => {
 
-    //<input type="file" accept="image/*">
-    // 요소는 모바일 기기에서 사용자가 터치하면 기본적으로 해당 기기의 사진 라이브러리, 카메라, 또는 파일 시스템에 접근할 수 있는 인터페이스를 제공함
-    // 이는 모바일 운영 체제와 브라우저가 자동으로 처리해 주기 때문에, 개발자가 별도로 모바일 특화 기능을 구현하지 않아도 됩니다.
-
     // 1. 안보이는 input 요소 생성 및 추가
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -11,6 +7,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     fileInput.style.display = 'none';
     fileInput.accept = 'image/*';
     document.body.appendChild(fileInput);
+    //<input type="file" accept="image/*">
+    // 요소는 모바일 기기에서 사용자가 터치하면 기본적으로 해당 기기의 사진 라이브러리, 카메라, 또는 파일 시스템에 접근할 수 있는 인터페이스를 제공함
+    // 이는 모바일 운영 체제와 브라우저가 자동으로 처리해 주기 때문에, 개발자가 별도로 모바일 특화 기능을 구현하지 않아도 됩니다.
+
 
     // 2. 화면에서 장소추가 버튼 가져와서 이벤트 연동하기.
     const btnAddPicture = document.getElementById('btn_addHotSpot');
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                             // 이제 sendImageDataToServer 함수를 호출하여 이미지 데이터와 위치 정보를 전송합니다.
                             console.log('이미지 등록 처리');
-                            sendImageDataToServer(file, left, top);
+                            sendImageDataToServer(file, left, top, this);
                         });
                     }
 
