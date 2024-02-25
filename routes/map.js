@@ -7,13 +7,13 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     // 브라우저 주소창으로 접근했을 때 어떤 페이지 보여줄지 쓰기
-    const result = await customFunc();
+    const result = await GetHotspotsFromDB();
 
-    console.log(result)
+    // console.log(result)
     const srcPath = result.map(row =>'/images/upload/'+row[0]);
     const pos_x = result.map(row =>row[1]);
     const pos_y = result.map(row =>row[2]);
-    console.log(srcPath)
+    // console.log(srcPath)
     res.render('map',{ srcPath, pos_x,pos_y })
 });
 
@@ -22,14 +22,14 @@ router.post('/', async (req, res) => {
     // const{ a,b,c } = req.body
 
     // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리
-    // const result = customFunc()
+    // const result = GetHotspotsFromDB()
 
     // 3. DB 요청 결과를 통해 어떤 화면과 연결시킬지 판단 및 결정.
     // res.render('', {})
 });
 
 // 4. DB 연결과 관련된 부분은 함수로 분리해서 따로 관리합니다.
-async function customFunc(){
+async function GetHotspotsFromDB(){
     let connection;
     try {
         // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
@@ -38,7 +38,7 @@ async function customFunc(){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'SELECT image_path, x_position, y_position from imagedata';
+        const sql_string =  'SELECT image_path, x_position, y_position from HOTSPOT';
         const result = await connection.execute( sql_string );
         // console.log(result)
 
