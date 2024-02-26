@@ -21,6 +21,16 @@ router.get('/', async (req, res) => {
     // res.sendFile(path.join(__dirname,'/../resources/xxx.html'))
 });
 
+router.get('/delete',async (req,res)=>{
+
+    // 뭔가 복잡하고 어려운 절차를 거쳤다고 가정하고. 결과적으로
+    const data = {
+        'imageId':'12312',
+        'imgaePath':'123123'
+    }
+
+})
+
 
 // 4. DB 연결과 관련된 부분은 함수로 분리해서 따로 관리합니다.
 async function customFunc(){

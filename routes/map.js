@@ -38,7 +38,7 @@ async function customFunc(){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'SELECT image_path, x_position, y_position from imagedata';
+        const sql_string =  'SELECT image_path, x_position, y_position from HOTSPOT';
         const result = await connection.execute( sql_string );
         // console.log(result)
 
