@@ -17,19 +17,19 @@ router.get('/', async (req, res) => {
     res.render('map',{ srcPath, pos_x,pos_y })
 });
 
-router.get('/delete',async (req,res)=>{
+router.get('/delete:SPOT_ADDRESS',async (req,res)=>{
     const result = await deleteHotspot();
     // 뭔가 복잡하고 어려운 절차를 거쳤다고 가정하고. 결과적으로
     const data = {
 
-        'IMAGE_PATH':'123123'
+        'SPOT_ADDRESS':'123123'
     }
-    const {imagePath} = req.body;
+    const {IMAGE_PATH} = req.body;
 })
-
+const SPOT_ADDRESS = req.params.SPOT_ADDRESS;
 
 // 4. DB 연결과 관련된 부분은 함수로 분리해서 따로 관리합니다.
-async function deleteHotspot(){
+async function deleteHotspot(IMAGE_PATH){
     let connection;
     try {
         // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
@@ -38,9 +38,12 @@ async function deleteHotspot(){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'DELETE FROM hotspot WHERE imgaePath = :imagePath';
-        const result = await connection.execute(sql_string, { imagePath: 'srcPath' });
-
+        // const sql_string =  'DELETE FROM hotspot WHERE imgaePath = :imagePath';
+        // const result = await connection.execute(sql_string, { imagePath: 'srcPath' });
+        await connection.execute(
+            `DELETE FROM hotspot WHERE SPOT_ADDRESS = :SPOT_ADDRESS`,
+            [SPOT_ADDRESS]
+        );
 
         // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
         if(result){
