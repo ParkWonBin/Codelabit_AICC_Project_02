@@ -6,8 +6,9 @@ const dbConfig = require('../_dbConfig');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname,'/../resources/login.html'))
+    res.sendFile(path.join(__dirname, '/../resources/login.html'));
 });
+
 
 router.post('/', async (req, res) => {
     // 요청온거 확인

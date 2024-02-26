@@ -16,5 +16,5 @@ app.use('/map', require('./routes/map'));
 
 // 게시판 서버 시작
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}/deleteMeber`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
