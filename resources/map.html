@@ -3,41 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <style>
-        body{
-            margin:0;
-            padding:0;
-        }
-
-        #backgroudimg {
-            position: absolute;
-            width: 100%;
-            height: 100vh;
-            /* 이미지 비율을 유지하면서 영역을 채움 */
-            /*object-fit: cover;*/
-        }
-
-        #upperMapContainer{
-            height: 500px;
-            width: 100%;
-            position: relative;
-
-        }
-
-        .floatingImage{
-            position: absolute;
-            width: 20%;
-        }
-</style>
+    <link rel="stylesheet" href="./css/map.css">
+    <link rel="stylesheet" href="./css/dragdrop.css">
+    <script src="./js/dragdrop.js"></script>
+    <script src="./js/dragImage.js"></script>
+    <script src="./js/map_addPicture.js"></script>
 </head>
 <body>
+<button id="btn_addHotSpot">장소추가</button>
 <!--지역에 따른-->
-<img id="backgroudimg" src="images/map_001.png">
-<div id="upperMapContainer">
 
-    <img class="floatingImage" style="top:10vh;left:10vw" src="../exer/images/image1.jpg" >
-    <img class="floatingImage" style="top:30vh;left:30vw" src="../exer/images/image2.jpg" >
-    <img class="floatingImage" style="top:50vh;left:50vw" src="../exer/images/image3.jpg" >
+<div id="MapContainer" class="drop-area">
+    <div class="dragable"  style="top:10vh;left:10vw">
+    <img  src="./images/image1.jpg" >
+    </div>
+    <div class="dragable" style="top:30vh;left:30vw">
+    <img  src="./images/image2.jpg" >
+    </div>
+    <div class="dragable" style="top:50vh;left:50vw" >
+    <img src="./images/image3.jpg" >
+    </div>
 </div>
 
 </body>

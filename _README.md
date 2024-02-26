@@ -9,6 +9,7 @@ README.MD 파일은 프로젝트 관리 및 발표와 관련된 내용으로 구
 npm init # 프로젝트 시작
 npm install express express-session ejs # express 설치
 npm install oracledb dotenv # oracle 연결
+npm install multer moment # 이미지 전송을 위함
 npm install bcryptjs passport # 보안관련
 ```
 
