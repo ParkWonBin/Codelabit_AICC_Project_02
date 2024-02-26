@@ -15,7 +15,7 @@ body{
     width: 100%;
     height: 100vh;
     position: relative;
-    background-image: url("../images/map_001.png");
+    background-image: url("../images/bak.png");
     background-size: 100% 100vh; /* 백그라운드 이미지가 컨테이너의 100% 너비와 높이를 꽉 채우도록 설정 */
 }
 
@@ -24,6 +24,7 @@ body{
     top : 1vh;
     left :1vw;
     z-index: 1;
+    z-index: 2;
     font-size: 3rem;
 
     /* 버튼 배경색 설정 */
@@ -41,4 +42,7 @@ body{
     background-color: blue;
     color:white;
     font-size: 1rem;
+    width: 3rem;
+    position: absolute;
+    z-index: 1;
 }
