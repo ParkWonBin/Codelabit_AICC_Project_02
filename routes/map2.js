@@ -32,7 +32,7 @@ async function customFunc(){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'select * from imagedata';
+        const sql_string =  'DELETE FROM hotspot WHERE spot_id =[];'
         const result = await connection.execute( sql_string );
 
         // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
