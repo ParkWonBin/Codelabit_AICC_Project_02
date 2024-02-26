@@ -7,33 +7,29 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     // 브라우저 주소창으로 접근했을 때 어떤 페이지 보여줄지 쓰기
-  const result = await customFunc();
-  console.table(result)
-  // console.log(result)
-    res.render('map2', {
-        'x':  [result[0][1],result[1][1],result[2][1]],
-        'y' : [result[0][2],result[1][2],result[2][2]],
-        'p' : [result[0][0],result[1][0],result[2][0]],
-        'n' : [result[0][4],result[1][4],result[2][4]]
-    })
-    //앞 사진123,뒤 값위치  x: result 배열의 각 요소의 두 번째 요소(인덱스 1)를 추출하여 새로운 배열을 만듭니다.
+    const result = await GetHotspotsFromDB();
 
-    // res.sendFile(path.join(__dirname,'/../resources/xxx.html'))
+    // console.log(result)
+    const srcPath = result.map(row =>'/images/upload/'+row[0]);
+    const pos_x = result.map(row =>row[1]);
+    const pos_y = result.map(row =>row[2]);
+    // console.log(srcPath)
+    res.render('map',{ srcPath, pos_x,pos_y })
 });
 
 router.get('/delete',async (req,res)=>{
-
+    const result = await deleteHotspot();
     // 뭔가 복잡하고 어려운 절차를 거쳤다고 가정하고. 결과적으로
     const data = {
-        'imageId':'12312',
-        'imgaePath':'123123'
-    }
 
+        'IMAGE_PATH':'123123'
+    }
+    const {imagePath} = req.body;
 })
 
 
 // 4. DB 연결과 관련된 부분은 함수로 분리해서 따로 관리합니다.
-async function customFunc(){
+async function deleteHotspot(){
     let connection;
     try {
         // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
@@ -42,8 +38,9 @@ async function customFunc(){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'DELETE FROM hotspot WHERE spot_id =[];'
-        const result = await connection.execute( sql_string );
+        const sql_string =  'DELETE FROM hotspot WHERE imgaePath = :imagePath';
+        const result = await connection.execute(sql_string, { imagePath: 'srcPath' });
+
 
         // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
         if(result){

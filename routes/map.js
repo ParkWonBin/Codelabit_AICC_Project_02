@@ -16,6 +16,17 @@ router.get('/', async (req, res) => {
     // console.log(srcPath)
     res.render('map',{ srcPath, pos_x,pos_y })
 });
+router.get('/delete',async (req,res)=>{
+
+    // 뭔가 복잡하고 어려운 절차를 거쳤다고 가정하고. 결과적으로
+    const data = {
+        // 'imageId':'12312',
+        'imgaePath':'123123'
+    }
+
+})
+
+
 
 router.post('/', async (req, res) => {
     // 1. post 로 요청받으면, 데이터를 가져오는게 시작. (아래는 예시)

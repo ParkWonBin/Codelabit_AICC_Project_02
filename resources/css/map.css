@@ -37,6 +37,24 @@ body{
 #btn_addHotSpot:hover{
     background-color: #00dd00;
 }
+#btn_delHotSpot{
+    position: absolute;
+    top : 1vh;
+    left :10vw;
+    z-index: 1;
+    z-index: 2;
+    font-size: 3rem;
+
+    /* 버튼 배경색 설정 */
+    border: 0.2rem solid white;
+    padding: 1px;
+    background-color: #adbd9f;
+    border-radius: 2vw;
+    color: #fff;
+}
+#btn_delHotSpot:hover{
+    background-color: #da677a;
+}
 
 .register-button{
     background-color: blue;
