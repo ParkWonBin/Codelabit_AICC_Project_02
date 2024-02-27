@@ -35,8 +35,8 @@ async function updateSpotPos(spotId, newLeft, newTop){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  '';
-        const result = await connection.execute( sql_string,{ } );
+        const sql_string =  'update hotspot set x_position = :newLeft, y_position = :newTop where spot_idx = :spotId';
+        const result = await connection.execute( sql_string,{'spotId':spotId, 'newLeft':newLeft, 'newTop':newTop } );
 
         // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
         if(result !== null){
