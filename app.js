@@ -15,7 +15,7 @@ app.use('/pwChange', require('./routes/pwChange'));
 app.use('/userDelete', require('./routes/userDelete'));
 // app.use('/mapImageUpload', require('./routes/mapImageUpload'));
 // app.use('/boardMain', require('./routes/boardMain'));
-// app.use('/logout', require('./routes/logout'));
+app.use('/logout', require('./routes/logout'));
 
 
 
