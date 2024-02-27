@@ -11,6 +11,7 @@ app.use('/login', require('./routes/login'));
 app.use('/userCreate', require('./routes/userCreate'));
 app.use('/map', require('./routes/map'));
 app.use('/mapImageUpload', require('./routes/mapImageUpload'));
+app.use('/mapDelete', require('./routes/mapSpotDelete'));
 // app.use('/boardMain', require('./routes/boardMain'));
 // app.use('/logout', require('./routes/logout'));
 

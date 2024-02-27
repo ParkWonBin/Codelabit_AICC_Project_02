@@ -9,12 +9,23 @@ router.get('/', async (req, res) => {
     // 브라우저 주소창으로 접근했을 때 어떤 페이지 보여줄지 쓰기
     const result = await GetHotspotsFromDB();
 
-    // console.log(result)
-    const srcPath = result.map(row =>'/images/upload/'+row[0]);
-    const pos_x = result.map(row =>row[1]);
-    const pos_y = result.map(row =>row[2]);
-    // console.log(srcPath)
-    res.render('map',{ srcPath, pos_x,pos_y })
+    console.log(result)
+    if( result.length > 0){
+        const srcPath = result.map(row =>'/images/upload/'+row[0]);
+        const pos_x = result.map(row =>row[1]);
+        const pos_y = result.map(row =>row[2]);
+        const spot_id = result.map(row =>row[3]);
+        console.log("여기는 오냐?")
+        console.log(JSON.stringify({ srcPath, pos_x,pos_y,spot_id }))
+        res.render('map2',{ srcPath, pos_x,pos_y,spot_id })
+    }else {
+        res.render('map2',{
+            'srcPath':[],
+            'pos_x':[],
+            'pos_y':[],
+            'spot_id':[]
+        })
+    }
 });
 router.get('/delete',async (req,res)=>{
 
@@ -49,7 +60,7 @@ async function GetHotspotsFromDB(){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'SELECT image_path, x_position, y_position from HOTSPOT';
+        const sql_string =  'SELECT image_path, x_position, y_position, spot_idx from HOTSPOT';
         const result = await connection.execute( sql_string );
         // console.log(result)
 
@@ -57,7 +68,8 @@ async function GetHotspotsFromDB(){
         if(result.rows.length>0){
             return result.rows;
         }else{
-            return null;
+            console.log("조회 결과가... 없어요 ㅠㅠ")
+            return [];
         }
     } catch (error) {
         // 4.4. 에러가 발생하면 어떤 에러인지 서버에 기록.

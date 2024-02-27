@@ -1,59 +1,36 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="ko-kr">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <style>
-        body{
-            margin: 0;
-            padding: 0;
-        }
-        #backgroudimg{
-            position: absolute;
-            width: 100%;
-            height: 80vh;
-        }
-        #upperMapContainer {
-            height:60vh;
-            width: 100vw;
-            position: relative;
-        }
-        #lowerMapContainer{
-            height: 40vh;
-            background-color: #d9aeae;: ;
-        }
-        .floatingImage{
-            position: absolute;
-            width: 10%;
-
-              }
-
-
-        button {
-            display: inline-block;
-            background-color: #c3d9ae;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 10px;
-        }
-
-
-    </style>
+    <link rel="stylesheet" href="./css/map.css">
+    <link rel="stylesheet" href="./css/dragdrop.css">
+    <script src="./js/map_Common.js"></script>
+    <script src="./js/map_dragdrop.js"></script>
+    <script src="./js/map_dragImage.js"></script>
+    <script src="./js/map_Btn_addPicture.js"></script>
+    <script src="./js/sendImageDataToServer.js"></script>
+    <script src="./js/map_Btn_delPicture.js"></script>
+</head>
 <body>
-<img id ="backgroudimg" src ="images/bak.png">
-<div id ="upperMapContainer">
-    <img class="floatingImage" style ="top:<%= x[0]%>vh;left:<%= y[0] %>vw" src="<%= p[0]%>">
-    <img class="floatingImage" style ="top:<%= x[1]%>vh;left:<%= y[1]%>vw" src=" <%= p[1]%>">
-    <img class="floatingImage" style ="top:<%= x[2]%>vh;left:<%= y[2]%>vw" src=" <%= p[2]%>">
+<button id="btn_addHotSpot">장소 추가</button>
+<% if (spot_id.length > 0) { %>
+    <form id="form_delete" action="/mapDelete" method="post">
+        <input style="display: none" name="spotId" value="<%= spot_id[0] %>">
+        <button id="btn_delHotSpot">장소 삭제</button>
+    </form>
+<% } else { %>
+    <!-- spot_id 배열의 길이가 0보다 작거나 같은 경우 아무것도 표시하지 않음 -->
+<% } %>
+<!--지역에 따른-->
+<div id="MapContainer" class="drop-area">
+    <% for(let i = 0; i < srcPath.length; i++){ %>
+        <div class="draggable" data-id="<%= spot_id[i]%>" style="top:<%= pos_y[i] %>vh;left:<%= pos_x[i] %>vw">
+            <img src="<%= srcPath[i] %>" >
+        </div>
+    <% } %>
 </div>
-<a href="/delete_btn/<%=imagedata[0].img_name%>" class="button">삭제</a>
-<div id="lowerMapContainer">
-         </div>
+
 </body>
 
 </html>
