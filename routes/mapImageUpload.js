@@ -29,23 +29,23 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 const router = express.Router();
 router.post('/', upload.single('image'), async (req, res) => {
-    // 1. post 로 요청받으면, 데이터를 가져오는게 시작. (아래는 예시)
-    console.log(req.file); // 업로드된 이미지 파일 정보
-    // console.log(req.body.left, req.body.top); // 이미지의 left, top 위치 정보
+    // console.log(req.file); // 업로드된 이미지 파일 정보
 
-    // db에 넣을 데이터
+    // 1. post 로 요청받으면, 데이터를 가져오는게 시작. (아래는 예시)
     const data = {
         fileName: req.file.filename,
+        sportName: 'test',
         top: req.body.top.replace('vh', ''),
         left: req.body.left.replace('vw', '')
     };
+    // console.log(data)
 
-    console.log(data)
     // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리
     const result = await insertImageToDB(data)
+    // 결과 : '성공','실패','에러' 중 하나
 
     // 3. DB 요청 결과를 통해 어떤 화면과 연결시킬지 판단 및 결정.
-    res.json({'status':'성공'})
+    res.json({'status':result})
 });
 
 // 4. DB 연결과 관련된 부분은 함수로 분리해서 따로 관리합니다.
@@ -58,7 +58,7 @@ async function insertImageToDB(data){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'INSERT INTO ImageData (image_id, image_path, x_position, y_position) VALUES (image_seq.NEXTVAL, :fileName, :left, :top)'
+        const sql_string =  'INSERT INTO HOTSPOT (spot_idx, spot_name, image_path, x_position, y_position) VALUES (HOTSPOT_SEQ.NEXTVAL,:sportName, :fileName, :left, :top)'
         const result = await connection.execute( sql_string,data );
 
         // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
