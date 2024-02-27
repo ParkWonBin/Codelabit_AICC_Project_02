@@ -12,7 +12,10 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     // 1. post 로 요청받으면, 데이터를 가져오는게 시작.
-    const {userId, userPw} = req.body
+    // const {userId, userPw} = req.body
+    const userId = req.session.userId;
+    const userPw = req.body.userPw;
+
     //console.log(req.body)
 
     // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리

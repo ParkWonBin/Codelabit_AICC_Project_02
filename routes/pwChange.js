@@ -12,7 +12,8 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res, next) => {
     // 1. post 로 요청받으면, 데이터를 가져오는게 시작.
-    const {userId, userPw, newPw, pwConfirm} = req.body
+    const userId = req.session.userId;
+    const { userPw, newPw, pwConfirm} = req.body;
 
     // 여기에서 newPw, pwConfirm 가 서로 같지 않으면, 실패했던 상황과 같이 처리해버리기.
     if (newPw === pwConfirm) {
