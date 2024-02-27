@@ -19,7 +19,7 @@ app.use('/mapUpdate', require('./routes/mapSpotUpdate'));
 // app.use('/mapImageUpload', require('./routes/mapImageUpload'));
 
 // app.use('/boardMain', require('./routes/boardMain'));
-// app.use('/logout', require('./routes/logout'));
+app.use('/logout', require('./routes/logout'));
 
 
 
