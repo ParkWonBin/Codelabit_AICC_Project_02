@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+    <meta charset="UTF-8">
+    <title>AICC Project2</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/login.css">
+
+    <script src="js/template.js"></script>
+</head>
+<body>
+<div id="mainPage">
+    <img src="images/map_001.png"/>
+    <div id="mainBox">
+        <h1>비밀번호 변경 페이지 입니다.</h1>
+        <form id="form_Login" action="/pwChange" method="post">
+            <div>
+                <label for="userId">아이디</label>
+                <input type="text" id="userId" name="userId" required>
+            </div>
+            <div>
+                <label for="userPw">비밀번호</label>
+                <input type="password" id="userPw" name="userPw" required>
+            </div>
+            <div>
+                <label for="userPw">새비밀번호</label>
+                <input type="password" id="userPw" name="newPw" required>
+            </div>
+            <div>
+                <label for="userPw">새비밀번호확인</label>
+                <input type="password" id="userPw" name="pwConfirm" required>
+            </div>
+            <div>
+                <button type="submit" class="mainButton">비밀번호변경</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

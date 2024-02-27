@@ -6,10 +6,13 @@ const app = require('./_initSetting')
 const port = 3000;
 
 // 라우팅 함수를 미들웨어(Middleware)로 처리
-app.use('/', require('./routes/index'));
+// app.use('/', require('./routes/index'));
 app.use('/login', require('./routes/login'));
 app.use('/userCreate', require('./routes/userCreate'));
 app.use('/map', require('./routes/map'));
+// app.use('/userManage', require('./routes/userManage'));
+app.use('/pwChange', require('./routes/pwChange'));
+app.use('/userDelete', require('./routes/userDelete'));
 // app.use('/mapImageUpload', require('./routes/mapImageUpload'));
 // app.use('/boardMain', require('./routes/boardMain'));
 // app.use('/logout', require('./routes/logout'));
