@@ -15,6 +15,7 @@ app.use('/mapDelete', require('./routes/mapSpotDelete'));
 // app.use('/userManage', require('./routes/userManage'));
 app.use('/pwChange', require('./routes/pwChange'));
 app.use('/userDelete', require('./routes/userDelete'));
+app.use('/mapUpdate', require('./routes/mapSpotUpdate'));
 // app.use('/mapImageUpload', require('./routes/mapImageUpload'));
 
 // app.use('/boardMain', require('./routes/boardMain'));

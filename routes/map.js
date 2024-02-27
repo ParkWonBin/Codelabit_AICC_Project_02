@@ -27,16 +27,6 @@ router.get('/', async (req, res) => {
         })
     }
 });
-router.get('/delete',async (req,res)=>{
-
-    // 뭔가 복잡하고 어려운 절차를 거쳤다고 가정하고. 결과적으로
-    const data = {
-        // 'imageId':'12312',
-        'imgaePath':'123123'
-    }
-
-})
-
 
 
 router.post('/', async (req, res) => {

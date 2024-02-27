@@ -42,6 +42,7 @@ async function deleteSpotFromDB(spot_id){
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
         const sql_string = `DELETE FROM hotspot WHERE spot_idx = :spot_idx`;
         const result = await connection.execute( sql_string,{'spot_idx':spot_id } );
+
 //{'spot_idx': spot_id} spot_idx는 SQL 쿼리 내에서 사용되는 매개변수 이름이며, spot_id는 이 매개변수에 전달되는 값입니다
         // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
         if(result.rowsAffected > 0){
