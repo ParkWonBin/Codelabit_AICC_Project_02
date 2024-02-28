@@ -15,15 +15,18 @@ router.get('/', async (req, res) => {
         const pos_x = result.map(row =>row[1]);
         const pos_y = result.map(row =>row[2]);
         const spot_id = result.map(row =>row[3]);
+        const spot_name = result.map(row =>row[4]);
+        const spot_address = result.map(row =>row[5]);
         console.log("여기는 오냐?")
-        console.log(JSON.stringify({ srcPath, pos_x,pos_y,spot_id }))
-        res.render('map2',{ srcPath, pos_x,pos_y,spot_id })
+        console.log(JSON.stringify({ srcPath, pos_x,pos_y,spot_id,spot_name,spot_address }))
+        res.render('map2',{ srcPath, pos_x,pos_y,spot_id,spot_name,spot_address })
     }else {
         res.render('map2',{
             'srcPath':[],
             'pos_x':[],
             'pos_y':[],
-            'spot_id':[]
+            'spot_id':[],
+
         })
     }
 });
@@ -50,7 +53,7 @@ async function GetHotspotsFromDB(){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'SELECT image_path, x_position, y_position, spot_idx from HOTSPOT';
+        const sql_string =  'SELECT image_path, x_position, y_position, spot_idx, spot_name ,spot_address from HOTSPOT';
         const result = await connection.execute( sql_string );
         // console.log(result)
 
