@@ -47,7 +47,7 @@ async function varifyID(userId,userPw){
 
 
         connection = await oracledb.getConnection(dbConfig);
-        const sql_query = 'SELECT user_id, user_name, user_no FROM users WHERE user_id = :userId AND user_pw = :userPw';
+        const sql_query = 'SELECT member_id, member_name, member_num FROM member WHERE member_id = :userId AND member_pw = :userPw';
         const result =  await connection.execute(sql_query, {'userId':userId, 'userPw':userPw});
 
 

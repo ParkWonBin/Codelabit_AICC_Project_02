@@ -59,7 +59,7 @@ async function pwChange(userId, userPw, newPw){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_query = 'update users set user_pw = :newPw WHERE user_id = :userId AND user_pw = :userPw';
+        const sql_query = 'update member set member_pw = :newPw WHERE member_id = :userId AND member_pw = :userPw';
         const result =  await connection.execute(sql_query, {
             'userId':userId,
             'userPw':userPw,
