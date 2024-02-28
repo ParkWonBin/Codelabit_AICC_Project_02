@@ -17,7 +17,7 @@ app.use('/pwChange', require('./routes/pwChange'));
 app.use('/userDelete', require('./routes/userDelete'));
 app.use('/mapUpdate', require('./routes/mapSpotUpdate'));
 // app.use('/mapImageUpload', require('./routes/mapImageUpload'));
-
+app.use('/chatbot', require('./routes/chatbot'));
 // app.use('/boardMain', require('./routes/boardMain'));
 app.use('/logout', require('./routes/logout'));
 
