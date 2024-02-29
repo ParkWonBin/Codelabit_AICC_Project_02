@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     let offsetY = 0; // 마우스 클릭 위치와 이미지의 y 위치 차이
 
     // PC버전에서 드래그 기능 사용을 위한 설정입니다.
-    document.addEventListener('mouseup', act_drag_end);
-    document.addEventListener('mousemove', act_drag_move);
     document.addEventListener('mousedown', act_drag_start);
+    document.addEventListener('mousemove', act_drag_move);
+    document.addEventListener('mouseup', act_drag_end);
 
     // 태블릿, 모바일에서 드래그 기능 사용을 위한 설정입니다.
     // 크롬의 경우 터치 이벤트에 등록된 기본 함수를 제거하기 위해 {passice:false} 설정이 필요하다.

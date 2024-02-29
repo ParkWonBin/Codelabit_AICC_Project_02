@@ -1,4 +1,12 @@
+document.addEventListener('touchend', function(e) {
+    const e_target = e.changedTouches  ? e.changedTouches [0] : e
+    selectImage(e_target);
+})
 document.addEventListener('click', function(e) {
+    selectImage(e);
+})
+
+const selectImage = (e) => {
     // 클릭 위치에 있는 최상단의 요소를 찾습니다.
     const topElement = document.elementFromPoint(e.clientX, e.clientY);
 
@@ -20,18 +28,17 @@ document.addEventListener('click', function(e) {
         const imgContainder = topElement.parentNode
         imgContainder.classList.add('Active')
 
-        alert('갱신/삭제 버튼 생성 ')
+        ////////////////////////////////
+        // alert('갱신/삭제 버튼 생성 ')
 
-        let btnContainder;
-        if (imgContainder.getElementsByClassName('btnContainer').length > 0){
-            btnContainder = imgContainder.getElementsByClassName('btnContainer')[0]
-        }else{
-            btnContainder = createElement({tagName: 'div',className:'btnContainer'})
-        }
+        // 버튼 컨테이너 가져오기 || 없으면 생성
+        const btnContainder =
+            (imgContainder.getElementsByClassName('btnContainer').length > 0) ?
+             imgContainder.getElementsByClassName('btnContainer')[0] :
+             createElement({tagName: 'div',className:'btnContainer'})
         imgContainder.appendChild(btnContainder);
 
-
-
+        // 갱신버튼 만들기
         const btnUpdate = createElement({
             tagName: 'button',
             textContent : '이동',
@@ -49,9 +56,7 @@ document.addEventListener('click', function(e) {
         })
         btnContainder.appendChild(btnUpdate);
 
-        // alert(JSON.stringify(imgContainder.getAttributeNames()))
-        // alert(JSON.stringify(imgContainder.getAttributeNames()))
-
+        // 삭제 버튼 만들기
         const btndelete = createElement({
             tagName: 'button',
             textContent : '삭제',
@@ -68,4 +73,4 @@ document.addEventListener('click', function(e) {
         btnContainder.appendChild(btndelete);
 
     }
-});
+};
