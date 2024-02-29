@@ -1,21 +1,26 @@
 const request_UpdateHotSpot = (data) => {
-    const {hotspot_id,src, left, top} = data
-    // hotspot_id : 해당 이미지의 id,
+    const {spot_id,src, left, top} = data
+    // spot_id : 해당 이미지의 id,
     // src : 해당 이미지의 경로
     // left: vw 단위의 숫자,
     // top: vh 단위의 숫자,
-    alert('request_UpdateHotSpot : '+JSON.stringify(data))
+    alert('request_UpdateHotSpot : '+JSON.stringify(data,null,2))
 
     // payload 만들기
     const formData = new FormData();
-    formData.append('hotspot_id', hotspot_id);
-    formData.append('image_path', src);
+    formData.append('spot_id', spot_id);
+    formData.append('src', src);
     formData.append('left', left);
     formData.append('top', top);
+    // 세션 통해 id 넘기고 본인이 만든것만 수정하도록
 
-    // 백엔드로 요청 보내기
-    fetch('/MapImageUpdate', {
-        method: 'POST',
+    // /map 백엔드로 요청 보내기
+    // Create : put
+    // Read : get
+    // Update : patch
+    // Delete : delete
+    fetch('/map', {
+        method: 'PATCH',
         body: formData
     })
         .then(response => {

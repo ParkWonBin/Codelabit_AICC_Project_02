@@ -77,15 +77,61 @@ function createImageConainer(data) {
                 const imgContainer = container;
                 // sendImageDataToServer 함수를 호출하여 이미지 데이터와 위치 정보를 전송합니다.
                 request_CreateHotSpot({
-                    file : imgContainer.src,
                     left : imgContainer.style.left,
-                    top : imgContainer.style.top
+                    top : imgContainer.style.top,
+                    file : reader.result
                 });
             }
         })
         btnCntainder.appendChild(btn);
 
     }
-    // 생성한 컨테이너 반환
 }
 
+const createBtnContainer = (imgContainder)=>{
+    // 버튼 컨테이너 없으면 생성
+    const btnContainder =
+        (imgContainder.getElementsByClassName('btnContainer').length > 0) ?
+            imgContainder.getElementsByClassName('btnContainer')[0] :
+            createElement({tagName: 'div',className:'btnContainer'})
+    imgContainder.appendChild(btnContainder)
+
+    // 등록 버튼이 존재한다면,이동 버튼을 만들지 않음.
+    if (btnContainder.getElementsByClassName('register-button').length === 0) {
+        // 등록버튼 없으면 이동버튼 만들기
+        const btnUpdate = createElement({
+            tagName: 'button',
+            textContent: '이동',
+            className: 'update-button',
+            onclick: () => {
+                const imgContainer = imgContainder;
+                // sendImageDataToServer 함수를 호출하여 이미지 데이터와 위치 정보를 전송합니다.
+                request_UpdateHotSpot({
+                    spot_id: imgContainer.getElementsByTagName('img')[0].getAttribute('data-id'),
+                    top: imgContainer.style.top,
+                    left: imgContainer.style.left,
+                    src: imgContainer.getElementsByTagName('img')[0].src
+                });
+            }
+        })
+        btnContainder.appendChild(btnUpdate);
+    }
+
+    // 삭제 버튼 만들기
+    const btndelete = createElement({
+        tagName: 'button',
+        textContent : '삭제',
+        className : 'delete-button',
+        onclick : ()=>{
+            const imgContainer = imgContainder;
+            // sendImageDataToServer 함수를 호출하여 이미지 데이터와 위치 정보를 전송합니다.
+            request_DeleteHotSpot({
+                spot_id: imgContainer.getElementsByTagName('img')[0].getAttribute('data-id'),
+                src: imgContainer.getElementsByTagName('img')[0].src
+            });
+        }
+    })
+    btnContainder.appendChild(btndelete);
+
+    return btnContainder
+}
