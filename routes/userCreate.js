@@ -48,7 +48,7 @@ async function createUser(userId, userPw, userName){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_query = 'INSERT INTO users (user_id, user_pw, user_name) VALUES (:userId, :userPw, :userName)'
+        const sql_query = 'INSERT INTO member (member_num, member_id, member_pw, member_name) VALUES (member_seq.nextval,  :userId, :userPw, :userName)'
         const result =  await connection.execute(sql_query, {userId, userPw, userName});
 
         // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.

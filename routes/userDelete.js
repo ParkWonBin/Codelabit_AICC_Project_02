@@ -53,7 +53,7 @@ async function deleteUser(userId, userPw){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_query = 'DELETE FROM users WHERE user_id = :userId AND user_pw = :userPw';
+        const sql_query = 'DELETE FROM member WHERE member_id = :userId AND member_pw = :userPw';
         const result =  await connection.execute(sql_query, {
             'userId':userId,
             'userPw':userPw,
