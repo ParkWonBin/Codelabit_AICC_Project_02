@@ -1,3 +1,4 @@
+/* 배경관련 ********************************************/
 body{
     margin:0;
     padding:0;
@@ -18,13 +19,12 @@ body{
     background-image: url("../images/bak.png");
     background-size: 100% 100vh; /* 백그라운드 이미지가 컨테이너의 100% 너비와 높이를 꽉 채우도록 설정 */
 }
-
+/* 장소등록 ********************************************/
 #btn_addHotSpot{
     position: absolute;
     top : 1vh;
     left :1vw;
     z-index: 1;
-    z-index: 2;
     font-size: 3rem;
 
     /* 버튼 배경색 설정 */
@@ -37,12 +37,44 @@ body{
 #btn_addHotSpot:hover{
     background-color: #00dd00;
 }
-
-.register-button{
-    background-color: blue;
-    color:white;
-    font-size: 1rem;
-    width: 3rem;
-    position: absolute;
-    z-index: 1;
+/* 이미지 내 버튼 ********************************************/
+.imageHotSpot{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
 }
+.imageHotSpot .btnContainer{
+    display: flex;
+    border-top: 2px solid black;
+}
+.imageHotSpot .btnContainer button{
+    width: 100%;
+    padding: 0.5vw;
+    color: black;
+    font-weight: bolder;
+    border: none;
+}
+.imageHotSpot .register-button{
+    background-color: greenyellow;
+}
+.imageHotSpot .update-button{
+    background-color: deepskyblue;
+}
+.imageHotSpot .delete-button{
+    background-color: coral;
+}
+.imageHotSpot img{
+    /* 이미지의 초기 너비를 % 대신 px 단위로 설정해야 드래그 시 위치가 더 정확해집니다. */
+    width: 12vw; /* 예시 너비, 적절히 조정해주세요. */
+    height: 15vh;
+    min-height: 15vw;
+    /*position: absolute; !* 초기에 absolute로 설정하여 드랍 영역 외부에서도 드래그 가능하게 함 *!*/
+    /*border: 0.2vw solid black;*/
+}
+
+/*    color:white;*/
+/*    font-size: 1rem;*/
+/*    width: 3rem;*/
+/*    position: absolute;*/
+/*    z-index: 1;*/
+/*}*/

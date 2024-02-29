@@ -20,10 +20,21 @@ document.addEventListener('click', function(e) {
         const imgContainder = topElement.parentNode
         imgContainder.classList.add('Active')
 
-        alert('갱신/삭제 버튼 생성')
+        alert('갱신/삭제 버튼 생성 ')
+
+        let btnContainder;
+        if (imgContainder.getElementsByClassName('btnContainer').length > 0){
+            btnContainder = imgContainder.getElementsByClassName('btnContainer')[0]
+        }else{
+            btnContainder = createElement({tagName: 'div',className:'btnContainer'})
+        }
+        imgContainder.appendChild(btnContainder);
+
+
+
         const btnUpdate = createElement({
             tagName: 'button',
-            textContent : '위치갱신',
+            textContent : '이동',
             className : 'update-button',
             onclick : ()=>{
                 const imgContainer = imgContainder;
@@ -36,14 +47,14 @@ document.addEventListener('click', function(e) {
                 });
             }
         })
-        imgContainder.insertBefore(btnUpdate,imgContainder.firstChild);
+        btnContainder.appendChild(btnUpdate);
 
         // alert(JSON.stringify(imgContainder.getAttributeNames()))
         // alert(JSON.stringify(imgContainder.getAttributeNames()))
 
         const btndelete = createElement({
             tagName: 'button',
-            textContent : '사진삭제',
+            textContent : '삭제',
             className : 'delete-button',
             onclick : ()=>{
                 const imgContainer = imgContainder;
@@ -54,7 +65,7 @@ document.addEventListener('click', function(e) {
                 });
             }
         })
-        imgContainder.insertBefore(btndelete,imgContainder.firstChild);
+        btnContainder.appendChild(btndelete);
 
     }
 });

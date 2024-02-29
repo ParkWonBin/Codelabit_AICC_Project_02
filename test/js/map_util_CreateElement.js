@@ -62,6 +62,12 @@ function createImageConainer(data) {
         })
         container.appendChild(img)
 
+        const btnCntainder = createElement({
+            tagName : 'div',
+            className : 'btnContainer'
+        })
+        container.appendChild(btnCntainder)
+
         // 등록 버튼 만들기
         const btn = createElement({
             tagName: 'button',
@@ -77,7 +83,7 @@ function createImageConainer(data) {
                 });
             }
         })
-        container.appendChild(btn);
+        btnCntainder.appendChild(btn);
 
     }
     // 생성한 컨테이너 반환
