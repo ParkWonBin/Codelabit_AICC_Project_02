@@ -23,4 +23,6 @@
 .drop-area .selectedImg {
     border: 0.3vw solid yellowgreen; /* 테두리 안쪽은 뚜렷한 초록색으로 */
     box-shadow: 0 0 3vw green; /* 테두리 바깥쪽은 흐린 초록색으로 */
+
+
 }

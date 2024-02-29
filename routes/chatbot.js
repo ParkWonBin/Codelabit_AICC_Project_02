@@ -8,33 +8,40 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     // 브라우저 주소창으로 접근했을 때 어떤 페이지 보여줄지 쓰기
     // res.render('',{})
-    res.sendFile(path.join(__dirname,'/../resources/chatbot.html'))
+    res.sendFile(path.join(__dirname,'../resources/chatbot.html'))
 });
 
 
 router.post('/', async (req, res) => {
     // 1. post 로 요청받으면, 데이터를 가져오는게 시작. (아래는 예시)
-    const { uspot_name, spot_address } = req.body;
-
+    // const {spot_id } = req.body;
     // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리
-    const result = await customFunc()
+    const result = await getSpotNameAndAddress()
     console.log(result)
-
-     //   const srcPath = result.map(row =>'/images/upload/'+row[0]);
-
-        const spot_name = result.map(row =>row[4]);
-        const spot_address = result.map(row =>row[5]);
+       const spot_name = result.map(row =>row[4]);
+        const spot_address = result.map(row =>'https://map.naver.com/p/search/'+ row[5]);
+        const region = result.map(row =>row[6]);
         console.log("여기는 오냐?")
-        console.log(JSON.stringify({spot_name,spot_address }))
-        res.render('map2',{spot_name,spot_address })
+        console.log(JSON.stringify({spot_name,spot_address,region }))
+        res.render('chatbot',{spot_name,spot_address,region })
 
     // 3. DB 요청 결과를 통해 어떤 화면과 연결시킬지 판단 및 결정.
     // res.render('', {})
 
 });
+router.post('/search', async (req, res) => {
+    // 1. post 로 요청받으면, 데이터를 가져오는게 시작. (아래는 예시)
+    const{ a,b,c } = req.body
 
-// 4. DB 연결과 관련된 부분은 함수로 분리해서 따로 관리합니다.
-async function customFunc(spot_name){
+    // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리
+    const result = await getSpotNameAndAddress()
+
+    // 3. DB 요청 결과를 통해 어떤 화면과 연결시킬지 판단 및 결정.
+    res.render('', {})
+});
+
+
+async function getSpotNameAndAddress(){
     let connection;
     try {
         // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
@@ -43,12 +50,12 @@ async function customFunc(spot_name){
         connection = await oracledb.getConnection(dbConfig);
 
         // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string = ' SELECT spot_name, spot_address FROM hotspot WHERE spot_name LIKE CONCAT(\'%\', :spot_name, \'%\');'
-        const result = await connection.execute( sql_string,{spot_name:spot_name} );
+        const sql_string = 'SELECT spot_name, spot_address, region FROM hotspot'
+        const result = await connection.execute( sql_string );
 
         // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
-        if(result !== null){
-            return result;
+        if(result.rows.length>0){
+            return result.rows;
         }else{
             return null;
         }
@@ -69,6 +76,10 @@ async function customFunc(spot_name){
         }
     }
 }
+
+
+
+
 
 
 module.exports = router;

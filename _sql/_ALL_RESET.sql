@@ -31,7 +31,7 @@ NOCYCLE;
 CREATE TABLE hotspot (
   spot_idx NUMBER NOT NULL, -- 입력한 순서
   spot_name varchar2(255) NOT NULL,  -- 소재지 이름(장소이름)
-  spot_address varchar2(255), -- 실제 주소(~~길)
+  spot_address varchar2(1000), -- 실제 주소(~~길)
   Auther_id VARCHAR2(50), --TBD ToBeDetermine 미정 추후 결정 예정 - 적절한 네이밍 필요.
   region VARCHAR2(100), -- 당장은 안쓰겠지만, 추후에 여러지역 관리할 일 있을 것 같아 미리 추가.
   x_position NUMBER NOT NULL,
@@ -93,10 +93,12 @@ INSERT INTO member (member_num, member_id, member_pw, member_name) VALUES (membe
 INSERT INTO member (member_num, member_id, member_pw, member_name) VALUES (member_seq.NEXTVAL, 'user2', 'password2', '영희');
 SELECT * FROM member;
 
---- IMAGEDATA
+---  hotspot
 INSERT INTO hotspot (spot_idx, spot_name, image_path, x_position, y_position) VALUES (hotspot_seq.NEXTVAL,'a경로당','image1.jpg', 10, 10);
 INSERT INTO hotspot (spot_idx, spot_name, image_path, x_position, y_position) VALUES (hotspot_seq.NEXTVAL,'b경로당','image2.jpg', 30, 30);
 INSERT INTO hotspot (spot_idx, spot_name, image_path, x_position, y_position) VALUES (hotspot_seq.NEXTVAL,'c경로당','image3.jpg', 50, 50);
+INSERT INTO hotspot (spot_idx, spot_name, image_path, x_position, y_position,spot_address,region) VALUES (hotspot_seq.NEXTVAL,'능안경로당','능안경로당.png', 20, 20;
+
 SELECT * FROM hotspot;
 
 --- POSTS
