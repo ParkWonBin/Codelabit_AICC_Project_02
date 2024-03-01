@@ -5,6 +5,7 @@
     <title><%= title %></title>
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="./css/mainForm.css">
+    <%- alertMsg? `<script>alert("${alertMsg}")</script>` : '' %>
 </head>
 <body>
 <div id="mainPage">
