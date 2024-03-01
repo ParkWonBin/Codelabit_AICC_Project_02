@@ -6,9 +6,8 @@ const app = require('./_initSetting')
 const port = 3000;
 
 // 라우팅 함수를 미들웨어(Middleware)로 처리
-
 // 메인 경로는 static 폴더 내 index.html을 사용하므로 별도 라우팅 안함.
-app.use('/', require('./routes/index'));
+app.use('/main', require('./routes/main'));
 // app.use('/login', require('./routes/login'));
 // app.use('/userCreate', require('./routes/userCreate'));
 // app.use('/map', require('./routes/map'));
@@ -27,5 +26,5 @@ app.use('/', require('./routes/index'));
 
 // 게시판 서버 시작
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}/main`);
 });
