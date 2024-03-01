@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
     // const{ a,b,c } = req.body
 
     // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리
-    // const result = customFunc()
+    // const result = await customFunc()
 
     // 3. DB 요청 결과를 통해 어떤 화면과 연결시킬지 판단 및 결정.
     // res.render('', {})
@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
 //         const result = await connection.execute( sql_string,{ } );
 //
 //         // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
-//         if(result){
+//         if(result !== null){
 //             return result;
 //         }else{
 //             return null;
