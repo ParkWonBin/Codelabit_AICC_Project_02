@@ -13,14 +13,14 @@ oracledb.initOracleClient({ libDir: process.env.ORACLEDB_INITORACLECLIENT });
 oracledb.autoCommit = true;
 ///////////////////////////////////
 
-const executeQuery = require('../db/db_executeQuery.js');
+const db_userUpdateMemberPasword = require("../db/db_userUpdateMemberPasword");
 
 // 무명함수를 이용하여 비동기함수 실행 예시
-(async () => {
-
-    const result1 = await executeQuery(`SELECT COUNT(*) as count FROM member`)
-    console.log('member count : '+ result1.rows[0][0]);
-
-    const result2 = await executeQuery(`SELECT * FROM member WHERE ROWNUM <= 5`)
-    console.table(result2.rows);
-})();
+(async ()=>{
+    const userId = 'test'
+    const userPw = '123'
+    const userPwNew = "aaa"
+    const userUpdateMemberPasword = await db_userUpdateMemberPasword(userId,userPw, userPwNew)
+    console.table(userUpdateMemberPasword)
+    console.log(`비밀번호 변경 : ${userUpdateMemberPasword.succeed?"성공":"실패"}`)
+})()

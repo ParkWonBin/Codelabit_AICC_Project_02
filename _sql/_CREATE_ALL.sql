@@ -1,5 +1,4 @@
 -- 회원정보 관련-------------------
--- TODO : member 테이블명을 member로 변경
 CREATE TABLE member (
   member_num NUMBER NOT NULL , -- 가입한 순서
   member_id VARCHAR2(50) NOT NULL,-- 회원 ID
@@ -60,7 +59,7 @@ NOCYCLE;
 CREATE TABLE comments (
   comment_id NUMBER,
   post_id NUMBER NOT NULL,
-  writer_id varchar2(50) NOT NULL,
+  writer_id varchar2(50),
   content varchar2(140),
   created_at TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
   parent_comment_id NUMBER,
