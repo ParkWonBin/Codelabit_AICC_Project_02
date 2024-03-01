@@ -15,7 +15,7 @@ npm install express express-session ejs # express 설치
 npm install oracledb dotenv # oracle 연결
 npm install multer@1.4.4 moment # 이미지 전송을 위함
 npm install bcryptjs passport # 보안관련
+
 # 한줄
 npm install fs path body-parser express express-session ejs oracledb dotenv  multer@1.4.4 moment bcryptjs passport
 ```
-
