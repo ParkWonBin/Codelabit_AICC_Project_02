@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
         'x':  [result[0][1],result[1][1],result[2][1]],
         'y' : [result[0][2],result[1][2],result[2][2]],
         'p' : [result[0][0],result[1][0],result[2][0]],
-        'n' : [result[0][4],result[1][4],result[2][4]]
+
     })
     //앞 사진123,뒤 값위치  x: result 배열의 각 요소의 두 번째 요소(인덱스 1)를 추출하여 새로운 배열을 만듭니다.
 
