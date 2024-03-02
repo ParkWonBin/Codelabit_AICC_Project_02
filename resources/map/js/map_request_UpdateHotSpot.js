@@ -8,22 +8,18 @@ const request_UpdateHotSpot = (data) => {
         return (typeof value === "string" && value.length > 30) ? value.substring(0, 30) + "..." :value;
     },2))
 
-    // payload 만들기
-    const formData = new FormData();
-    formData.append('spot_id', spot_id);
-    formData.append('src', src);
-    formData.append('left', left);
-    formData.append('top', top);
-    // 세션 통해 id 넘기고 본인이 만든것만 수정하도록
-
     // /map 백엔드로 요청 보내기
-    // Create : put
-    // Read : get
-    // Update : patch
-    // Delete : delete
-    fetch('/map', {
-        method: 'PATCH',
-        body: formData
+    fetch('/map/update', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            spotId:spot_id,
+            src,
+            left,
+            top
+        })
     })
         .then(response => {
             if (!response.ok) { throw new Error('이미지 등록에 실패했습니다.') }

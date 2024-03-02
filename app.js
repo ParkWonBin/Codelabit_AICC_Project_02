@@ -10,23 +10,7 @@ const port = 3000;
 app.get('/',(req,res)=>{res.redirect('/main')})
 app.use('/main', require('./routes/main'));
 app.use('/user', require('./routes/user'));
-
-
-
-// app.use('/login', require('./routes/login'));
-// app.use('/userCreate', require('./routes/userCreate'));
-// app.use('/map', require('./routes/map'));
-// app.use('/mapImageUpload', require('./routes/mapImageUpload'));
-// app.use('/mapDelete', require('./routes/mapSpotDelete'));
-// app.use('/userManage', require('./routes/userManage'));
-// app.use('/pwChange', require('./routes/pwChange'));
-// app.use('/userDelete', require('./routes/userDelete'));
-// app.use('/mapUpdate', require('./routes/mapSpotUpdate'));
-// app.use('/mapImageUpload', require('./routes/mapImageUpload'));
-// app.use('/chatbot', require('./routes/chatbot'));
-// app.use('/boardMain', require('./routes/boardMain'));
-// app.use('/logout', require('./routes/logout'));
-
+app.use('/map', require('./routes/map'));
 
 
 // 게시판 서버 시작

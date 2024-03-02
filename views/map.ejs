@@ -2,15 +2,17 @@
 <html lang="ko-kr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>AICC2 MAP</title>
     <link rel="stylesheet" href="./css/map.css">
     <link rel="stylesheet" href="./css/dragdrop.css">
-    <script src="./js/map_Common.js"></script>
-    <script src="./js/map_dragdrop.js"></script>
-    <script src="./js/map_dragImage.js"></script>
-    <script src="./js/map_Btn_addPicture.js"></script>
-    <script src="./js/sendImageDataToServer.js"></script>
-    <script src="./js/map_Btn_delPicture.js"></script>
+    <script src="./js/map_request_CreateHotSpot.js"></script>
+    <script src="./js/map_request_DeleteHotSpot.js"></script>
+    <script src="./js/map_request_UpdateHotSpot.js"></script>
+    <script src="./js/map_ui_initSetting.js"></script>
+    <script src="./js/map_util_CreateElement.js"></script>
+    <script src="./js/map_util_ClickTopElement.js"></script>
+    <script src="./js/map_util_drag.js"></script>
+    <script src="./js/map_util_drop.js"></script>
 </head>
 <body>
 <!--  챗봇 표시줄 -->
@@ -25,7 +27,7 @@
 <div id="MapContainer" class="drop-area">
     <% for(let i = 0; i < srcPath.length; i++){ %>
     <div class="draggable" data-id="<%= spot_id[i]%>" style="top:<%= pos_y[i] %>vh;left:<%= pos_x[i] %>vw">
-        <img src="<%= srcPath[i] %>">
+        <img src="<%= srcPath[i] %>" data-id="<%= spot_id[i]%>">
     </div>
     <% } %>
 </div>
