@@ -2,20 +2,18 @@
 <html lang="ko-kr">
 <head>
     <meta charset="UTF-8">
-    <title>AICC2 MAP</title>
+    <title>Title</title>
     <link rel="stylesheet" href="./css/map.css">
     <link rel="stylesheet" href="./css/dragdrop.css">
-    <script src="./js/map_request_CreateHotSpot.js"></script>
-    <script src="./js/map_request_DeleteHotSpot.js"></script>
-    <script src="./js/map_request_UpdateHotSpot.js"></script>
-    <script src="./js/map_ui_initSetting.js"></script>
-    <script src="./js/map_util_CreateElement.js"></script>
-    <script src="./js/map_util_ClickTopElement.js"></script>
-    <script src="./js/map_util_drag.js"></script>
-    <script src="./js/map_util_drop.js"></script>
+    <script src="./js/map_Common.js"></script>
+    <script src="./js/map_dragdrop.js"></script>
+    <script src="./js/map_dragImage.js"></script>
+    <script src="./js/map_Btn_addPicture.js"></script>
+    <script src="./js/sendImageDataToServer.js"></script>
+    <script src="./js/map_Btn_delPicture.js"></script>
 </head>
 <body>
-<!--  챗봇 표시 -->
+<!--  챗봇 표시줄 -->
 <a id="form_chatbot" href="/chatbot" target="_blank" style="position:absolute;right:3vw;bottom:3vh;z-index:3;text-decoration:none;color:#715253;background-color:#ffff00;padding:7px;border:3px solid #715253;border-radius:25%;">
     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-chat-text-fill"
          id=chat-bot viewBox="0 0 16 16">
@@ -23,18 +21,16 @@
     </svg>
 </a>
 
-<!--이미지 표시 예시 -->
+<!--  이미지 표시줄 -->
 <div id="MapContainer" class="drop-area">
-    <div class="draggable" style="top:10vh;left:10vw">
-        <img src="./images/upload/image1.jpg" data-id="1">
+    <% for(let i = 0; i < srcPath.length; i++){ %>
+    <div class="draggable" data-id="<%= spot_id[i]%>" style="top:<%= pos_y[i] %>vh;left:<%= pos_x[i] %>vw">
+        <img src="<%= srcPath[i] %>">
     </div>
-    <div class="draggable" style="top:30vh;left:30vw">
-        <img src="./images/upload/image2.jpg" data-id="2">
-    </div>
-    <div class="draggable" style="top:50vh;left:50vw">
-        <img src="./images/upload/image3.jpg" data-id="3">
-    </div>
+    <% } %>
 </div>
+
+<!--  TODO: 나중에 이미지 슬라이더 추가 -->
 
 </body>
 </html>
