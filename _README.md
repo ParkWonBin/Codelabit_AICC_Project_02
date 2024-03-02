@@ -8,6 +8,7 @@ README.MD 파일은 프로젝트 관리 및 발표와 관련된 내용으로 구
 multer의 경우 최신버전은 한글을 지원하지 않음.   
 nulter 1.4.4 버전 다운로드를 위해 ```npm install multe@1.4.4``` 명령 수행.   
 이미 최신버전 multer가 설치돼있다면, ```npm uninstall multer```로 삭제 후 재설치 요망.
+
 ```bash
 npm init # 프로젝트 시작
 npm install fs path body-parser

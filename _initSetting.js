@@ -2,6 +2,19 @@
 // app.js 실행했을 때, dotenv 파일을 수행하고 시작하므로
 // 이후 app.js 에서 다른 파일을 참조할 때, .env 환경변수에 접근할 수 있다.
 
+// .env 파일 탬플릿 - 이런 느낌으로 작성합니다.
+// # DB 연결
+// DB_USER=hr
+// DB_PASSWORD=hr
+// DB_CONNECT_STRING=localhost:1521/xe
+// DB_EXTERNAL_AUTH=false
+//
+// # DB 클라이언트
+// ORACLEDB_INITORACLECLIENT=C:\wbpark\instantclient_21_13
+//
+// # 세션정보
+// SESSION_SECRET_KEY=youMustChangeKeyDontUseThisString
+
 //############################################################
 // oracledb 모듈에 대한 기본 설정을 수행함.
 const oracledb = require('oracledb');
