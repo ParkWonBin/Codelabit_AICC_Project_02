@@ -160,7 +160,20 @@ const createBtnContainer = (imgContainder)=>{
         request_DeleteHotSpot({
             spot_id: imgContainer.getElementsByTagName('img')[0].getAttribute('data-id'),
             src: imgContainer.getElementsByTagName('img')[0].src
-        });
+        }).then(succeed => {
+            if (succeed) {
+                console.log("이미지 삭제 성공");
+                imgContainder.remove()
+            } else {
+                console.log("이미지 삭제 실패");
+            }
+        })
+            .catch(error => {
+                console.error("이미지 삭제 중 오류 발생:", error);
+            })
+            .finally(() => {
+                console.log("이미지 삭제 요청 처리 완료");
+            });
     }
     // 삭제 버튼 만들기
     const btndelete = createElement({

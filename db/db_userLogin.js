@@ -2,12 +2,12 @@ const oracledb = require('oracledb');
 const dbConfig = require('../_dbConfig');
 
 /**
-* member 테이블에서 member_id와 member_pw가 일치하는 대상을 조회합니다.
-* @author (개선) wbpark
-* @author (초안) 이정훈
-* @param {string} memberId - 사용자 아이디
-* @param {string} memberPw - 사용자 비밀번호
-* @returns {{
+ * member 테이블에서 member_id와 member_pw가 일치하는 대상을 조회합니다.
+ * @author (개선) wbpark
+ * @author (초안) 이정훈
+ * @param {string} memberId - 사용자 아이디
+ * @param {string} memberPw - 사용자 비밀번호
+ * @returns {{
  * succeed:boolean,
  * memberNum:number,
  * memberId:string,
@@ -21,7 +21,7 @@ const dbConfig = require('../_dbConfig');
  * .memberName - 사용자 이름 <br>
  * .memberRole - 사용자 역할 <br>
  * .error - 에러여부 혹은 에러내역
-*/
+ */
 const db_userLogin = async (memberId, memberPw) => {
     let connection;
     // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
@@ -39,32 +39,32 @@ const db_userLogin = async (memberId, memberPw) => {
         // 가령 성공 여부 등
         if (result.rows.length > 0) {
             return {
-                succeed:true,
-                memberNum:result.rows[0][1],
-                memberId:result.rows[0][0],
-                memberName:result.rows[0][2],
-                memberRole:result.rows[0][3],
-                error:null
+                succeed: true,
+                memberNum: result.rows[0][1],
+                memberId: result.rows[0][0],
+                memberName: result.rows[0][2],
+                memberRole: result.rows[0][3],
+                error: null
             };
         } else {
             return {
-                succeed:false,
-                memberNum:null,
-                memberId:null,
-                memberName:null,
-                memberRole:null,
-                error:'일치하는 ID/PW 없음'
+                succeed: false,
+                memberNum: null,
+                memberId: null,
+                memberName: null,
+                memberRole: null,
+                error: '일치하는 ID/PW 없음'
             };
         }
     } catch (error) {
         // 4. 에러가 발생하면 어떤 에러인지 서버에 기록.
         console.error('오류 발생:', error);
         return {
-            succeed:false,
-            memberNum:null,
-            memberId:null,
-            memberName:null,
-            memberRole:null,
+            succeed: false,
+            memberNum: null,
+            memberId: null,
+            memberName: null,
+            memberRole: null,
             error: error
         };
     } finally {

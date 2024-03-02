@@ -7,7 +7,7 @@ const dbConfig = require('../_dbConfig');
  * @author wbpark
  * @param {string} sqlString 문자열로 SQL 쿼리를 입력합니다.
  */
-async function sendQueryToDB(sqlString) {
+const sendQueryToDB = async (sqlString) => {
     let connection;
     // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
     try {

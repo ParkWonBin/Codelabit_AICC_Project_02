@@ -21,17 +21,17 @@ const dbConfig = require('../_dbConfig');
  *   region: string[],
  *   error: string|Error
  * }}
- * - succeed: 로그인 성공 여부
- * - srcPath: 이미지 파일 경로 배열
- * - pos_x: 핫스팟의 X 좌표 배열
- * - pos_y: 핫스팟의 Y 좌표 배열
- * - spot_id: 핫스팟의 고유 ID 배열
- * - spot_name: 핫스팟의 이름 배열
- * - spot_address: 핫스팟의 주소 배열
- * - region: 핫스팟이 위치한 지역 배열
- * - error: 에러 여부 혹은 에러 내역
+ * .succeed - 로그인 성공 여부
+ * .srcPath - 이미지 파일 경로 배열
+ * .pos_x - 핫스팟의 X 좌표 배열
+ * .pos_y - 핫스팟의 Y 좌표 배열
+ * .spot_id - 핫스팟의 고유 ID 배열
+ * .spot_name - 핫스팟의 이름 배열
+ * .spot_address - 핫스팟의 주소 배열
+ * .region - 핫스팟이 위치한 지역 배열
+ * .error - 에러 여부 혹은 에러 내역
  */
-async function db_mapGetHotspotList() {
+const db_mapGetHotspotList = async () => {
     let connection;
     // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
     try {
@@ -58,7 +58,7 @@ async function db_mapGetHotspotList() {
             return {srcPath, pos_x, pos_y, spot_id, spot_name, spot_address, region, error}
         } else {
             return {
-                succeed : true,
+                succeed: true,
                 srcPath: [],
                 pos_x: [],
                 pos_y: [],
@@ -66,14 +66,14 @@ async function db_mapGetHotspotList() {
                 spot_name: [],
                 spot_address: [],
                 region: [],
-                error : null
+                error: null
             }
         }
     } catch (error) {
         // 4. 에러가 발생하면 어떤 에러인지 서버에 기록.
         console.error('오류 발생:', error);
         return {
-            succeed : false,
+            succeed: false,
             srcPath: [],
             pos_x: [],
             pos_y: [],
@@ -81,7 +81,7 @@ async function db_mapGetHotspotList() {
             spot_name: [],
             spot_address: [],
             region: [],
-            error : error
+            error: error
         }
     } finally {
         // DB 연결 해제(try에서 return 하면, finally에 있는 코드 수행 후 return 됨)

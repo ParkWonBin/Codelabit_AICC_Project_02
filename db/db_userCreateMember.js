@@ -23,7 +23,7 @@ const dbConfig = require('../_dbConfig');
  * .memberRole - 사용자 역할 <br>
  * .error - 에러여부 혹은 에러내역
  */
-async function db_userCreateMember(memberId,memberPw,memberName){
+const db_userCreateMember = async (memberId, memberPw, memberName) => {
     let connection;
     // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
     try {
@@ -32,48 +32,53 @@ async function db_userCreateMember(memberId,memberPw,memberName){
         connection = await oracledb.getConnection(dbConfig);
 
 
-
         // 2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
         const sqlString = `
             INSERT INTO member (member_num, member_id, member_pw, member_name)
             VALUES (member_seq.nextval, :memberId, :memberPw, :memberName)`;
-        const bindData = {memberId,memberPw, memberName}
-        const result = await connection.execute( sqlString, bindData );
+        const bindData = {memberId, memberPw, memberName}
+        const result = await connection.execute(sqlString, bindData);
 
         // 3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
         if (result.rowsAffected > 0) {
             // 방금 가입한 계정의 순번 가져오기
-            const memberNum = (await connection.execute( `SELECT member_num FROM member WHERE member_id = :memberId`,{memberId} )).rows[0][0]
+            const memberNum = (await connection.execute(`
+                                SELECT member_num
+                                FROM member
+                                WHERE member_id = :memberId`,
+                    {memberId})
+            ).rows[0][0]
 
             return {
-                succeed:true,
-                memberNum:memberNum,
-                memberId:memberId,
-                memberName:memberName,
-                memberRole:null,
-                error:null
+                succeed: true,
+                memberNum: memberNum,
+                memberId: memberId,
+                memberName: memberName,
+                memberRole: null,
+                error: null
             };
         } else {
             return {
-                succeed:false,
-                memberNum:null,
-                memberId:null,
-                memberName:null,
-                memberRole:null,
-                error:'회원가입 실패'
+                succeed: false,
+                memberNum: null,
+                memberId: null,
+                memberName: null,
+                memberRole: null,
+                error: '회원가입 실패'
             };
         }
     } catch (error) {
         // 4. 에러가 발생하면 어떤 에러인지 서버에 기록.
         console.error('오류 발생:', error);
-         return {
-            succeed:false,
-            memberNum:null,
-            memberId:null,
-            memberName:null,
-            memberRole:null,
-            error:error
-        };;
+        return {
+            succeed: false,
+            memberNum: null,
+            memberId: null,
+            memberName: null,
+            memberRole: null,
+            error: error
+        };
+        ;
     } finally {
         // DB 연결 해제(try에서 return 하면, finally에 있는 코드 수행 후 return 됨)
         if (connection) {

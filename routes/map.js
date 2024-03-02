@@ -9,14 +9,16 @@ const db_mapGetHotspotList = require('../db/db_mapGetHotspotList')
 const db_mapCreateHotspot = require('../db/db_mapCreateHotspot')
 const db_mapUpdateHotspotPos = require('../db/db_mapUpdateHotspotPos')
 const db_mapDeleteHotspot = require('../db/db_mapDeleteHotspot')
-const saveBase64AndReturnFileNameByCurrentTime = require('../util/util_saveBase64AndReturnFileNameByCurrentTime');
 const db_mapCheckSpotExistByIdSrc = require('../db/db_mapCheckSpotExistByIdSrc')
+
+const saveBase64AndReturnFileNameByCurrentTime = require('../util/util_saveBase64AndReturnFileNameByCurrentTime');
+const util_deleteFileIfExists = require('../util/util_deleteFileIfExists')
 
 // http://localhost:3000/map
 router.get('/', async (req, res) => {
     // 브라우저 주소창으로 접근했을 때 어떤 페이지 보여줄지 쓰기
     const result = await db_mapGetHotspotList();
-    res.render('map', result)
+    return res.render('map', result)
 });
 
 // http://localhost:3000/map/create
@@ -56,41 +58,42 @@ router.post('/update', async (req, res) => {
     const newTop = parseInt(req.body.newTop)
     console.log({src,spotId,newTop,newLeft})
 
-
-
     // 2. 처리
     // 2.1. 해당 spotid에 해당 파일명으로 데이터가 있는지 검증. (페이로드 변조 아닌지)
     const mapCheckSpotExist = await db_mapCheckSpotExistByIdSrc(spotId, src)
     if(!mapCheckSpotExist.spotExist){
         // id 와 src(정확히는 파일명)이 일치하지 않는 경우, 파일 삭제를 시도하지 않고 배용 반환
         console.log(`해당 spotId(${spotId}), src(${src})의 파일명과 일치하는 데이터가 DB에 없습니다.`)
-        res.json(mapCheckSpotExist)
+        return res.json(mapCheckSpotExist)
     }
 
     // 2.2. 해당 spot 위치 변경
     const mapUpdateHotspotPos = await db_mapUpdateHotspotPos(spotId, newLeft, newTop);
-    if (!mapUpdateHotspotPos.succeed) {
-        console.error(mapUpdateHotspotPos.error)
-    }
-    console.log(JSON.stringify(mapUpdateHotspotPos))
-    res.json(mapUpdateHotspotPos)
+    return res.json(mapUpdateHotspotPos)
 });
 
 router.post('/delete', async (req, res) => {
     // 1. req.query, req.params, req.body, req.session 등 데이터를 가져옵니다.
-    const {spotId, src} = req.body
+    const spotId = parseInt(req.body.spotId)
+    const src = path.basename(req.body.src)
+    console.log({src,spotId})
 
-    // 2.1. 해당 spotid에 해당 파일명으로 데이터가 있는지 검증. (페이로드 변조 아닌지)
-    // TODO : spotid, src 로 해당 데이터 존재하는지 확인
+    // 2. 해당 spotid에 해당 파일명으로 데이터가 있는지 검증. (페이로드 변조 아닌지)
+    const mapCheckSpotExist = await db_mapCheckSpotExistByIdSrc(spotId, src)
+    if(!mapCheckSpotExist.spotExist){
+        // id 와 src(정확히는 파일명)이 일치하지 않는 경우, 파일 삭제를 시도하지 않고 배용 반환
+        console.log(`해당 spotId(${spotId}), src(${src})의 파일명과 일치하는 데이터가 DB에 없습니다.`)
+        return res.json(mapCheckSpotExist)
+    }
 
-    // 2.2. 해당 spot 삭제 시도
-    const mapDeleteHotspot = await db_mapDeleteHotspot(spotId, newLeft, newTop);
-
-    // 2.3. 실패시 로그 찍기
-    if (!mapDeleteHotspot.succeed) { console.error(mapDeleteHotspot.error) }
-
-    // 3. 응답 정의
-    res.json(mapDeleteHotspot)
+    // 3. 해당 spot 삭제 시도
+    const mapDeleteHotspot = await db_mapDeleteHotspot(spotId);
+    if(mapDeleteHotspot.succeed){
+        // DB에서 팡리 삭제 성공 시, 실재 파일 삭제하기
+        const deleteFile = util_deleteFileIfExists(path.join(imgUploadDir, src))
+        console.log(`파일 삭제 ${deleteFile? '성공' :'실패'}`)
+    }
+    return res.json(mapDeleteHotspot)
 });
 
 module.exports = router;

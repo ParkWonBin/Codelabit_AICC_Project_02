@@ -15,7 +15,7 @@ const path = require("path");
  * - fileName 저장된 파일명
  * - error 에러발생 시 에러 반환
  */
-function util_saveBase64AndReturnFileNameByCurrentTime(base64Data, uploadDir) {
+const util_saveBase64AndReturnFileNameByCurrentTime = (base64Data, uploadDir) => {
     // Base64 인코딩 데이터에서 실제 이미지 데이터와 MIME 타입을 분리합니다.
     const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
     if (!matches || matches.length !== 3) {

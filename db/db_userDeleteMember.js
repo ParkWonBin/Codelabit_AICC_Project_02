@@ -9,11 +9,10 @@ const dbConfig = require('../_dbConfig');
  * @param {string} memberPw - 사용자 비밀번호
  * @returns {{
  * succeed:boolean,
- * rowsAffected:number,
  * error:string|error
  * }}
  */
-async function db_userDeleteMember(memberId,memberPw){
+const db_userDeleteMember = async (memberId, memberPw) => {
     let connection;
     // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
     try {
@@ -22,22 +21,21 @@ async function db_userDeleteMember(memberId,memberPw){
         connection = await oracledb.getConnection(dbConfig);
 
         // 2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sqlString =  'DELETE FROM member WHERE member_id = :memberId AND member_pw = :memberPw';
-        const bindData = {memberId,memberPw}
-        const result = await connection.execute( sqlString, bindData );
+        const sqlString = 'DELETE FROM member WHERE member_id = :memberId AND member_pw = :memberPw';
+        const bindData = {memberId, memberPw}
+        const result = await connection.execute(sqlString, bindData);
 
         // 3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
         return {
-            succeed:true,
-            ...result,
-            error:null
+            succeed: result.rowsAffected > 0,
+            error: null
         };
     } catch (error) {
         // 4. 에러가 발생하면 어떤 에러인지 서버에 기록.
         console.error('오류 발생:', error);
         return {
-            succeed:null,
-            error:error
+            succeed: null,
+            error: error
         };
     } finally {
         // DB 연결 해제(try에서 return 하면, finally에 있는 코드 수행 후 return 됨)

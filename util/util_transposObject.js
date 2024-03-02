@@ -27,7 +27,7 @@ const transposeDynamicKeys = (input) => {
     const keys = Object.keys(input).filter(key => Array.isArray(input[key])); // 배열인 속성만 필터링
     const maxLength = Math.max(...keys.map(key => input[key].length)); // 가장 긴 배열의 길이 찾기
 
-    return Array.from({ length: maxLength }, (_, index) => {
+    return Array.from({length: maxLength}, (_, index) => {
         return keys.reduce((acc, key) => {
             acc[key] = input[key][index] != null ? input[key][index] : 'N/A'; // `null`을 `'N/A'`로 대체
             return acc;
