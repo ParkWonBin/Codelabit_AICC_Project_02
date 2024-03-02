@@ -10,12 +10,11 @@ const port = 3000;
 app.get('/',(req,res)=>{res.redirect('/main')})
 app.use('/main', require('./routes/main'));
 app.use('/user', require('./routes/user'));
-
+app.use('/map', require('./routes/map'));
 
 
 // app.use('/login', require('./routes/login'));
 // app.use('/userCreate', require('./routes/userCreate'));
-// app.use('/map', require('./routes/map'));
 // app.use('/mapImageUpload', require('./routes/mapImageUpload'));
 // app.use('/mapDelete', require('./routes/mapSpotDelete'));
 // app.use('/userManage', require('./routes/userManage'));

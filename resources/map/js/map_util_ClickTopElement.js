@@ -27,7 +27,8 @@ const selectImage = (e) => {
         ////////////////////////////////
         // alert('갱신/삭제 버튼 생성 ')
         const imgContainder = topElement.parentNode
-        // imgContainder.classList.add('Active')
+        // 이미 [이동/삭제]버튼 있는지 구분하기 위해 임시로 'Active' 클래스를 추가합니다.
+        imgContainder.classList.add('Active')
         // [이동/삭제]버튼 컨테이너 생성
         createBtnContainer(imgContainder);
     }

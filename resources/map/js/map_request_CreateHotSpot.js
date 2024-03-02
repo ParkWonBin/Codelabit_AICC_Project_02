@@ -1,27 +1,29 @@
 const request_CreateHotSpot = (data) => {
     const {file, left, top} = data
-    // file: file객체,
-    // left: vw 단위의 숫자,
-    // top: vh 단위의 숫자,
     alert('request_CreateHotSpot : '+JSON.stringify(data,(key, value)=>{
             return (typeof value === "string" && value.length > 30) ? value.substring(0, 30) + "..." :value;
     },2))
 
     // payload 만들기
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('left', left);
-    formData.append('top', top);
+    // multer를 쓸 때는 필요하지만, 요청 body 상한을 올리고
+    // req.body 에서 받은 데이터를 baseb4로 처리하도록 수정하면서 비활성화
+    // const formData = new FormData();
+    // formData.append('base64Data', file);
+    // formData.append('top', top);
+    // formData.append('left', left);
     // 세션 통해 id 넘기고 본인이 만든것만 수정하도록
 
     // /map 백엔드로 요청 보내기
-    // Create : put
-    // Read : get
-    // Update : patch
-    // Delete : delete
-    fetch('/map', {
-        method: 'PUT ',
-        body: formData
+    fetch('/map/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            base64Data: file,
+            top: top,
+            left: left
+        })
     })
         .then(response => {
             if (!response.ok) { throw new Error('이미지 등록에 실패했습니다.') }

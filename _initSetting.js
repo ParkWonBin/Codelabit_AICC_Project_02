@@ -41,9 +41,9 @@ app.use('/', express.static(path.join(__dirname, 'resources')));
 // 이후에 라우터에서 다음과 같은 방식으로 변수 받아오려고 미들웨어 사용
 // const { title, content } = req.body;
 app.use(bodyParser.urlencoded({extended:false}));
-
 // JSON 형태의 요청 본문을 파싱하기 위해 express.json() 미들웨어를 사용합니다.
-app.use(express.json());
+// 요청의 크기는 최대 50mb로 상향 조정합니다.
+app.use(express.json({ limit: '50mb' }));
 
 // express-session 미들웨어 설정
 app.use(session({
