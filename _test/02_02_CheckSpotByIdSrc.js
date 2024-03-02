@@ -13,15 +13,16 @@ oracledb.initOracleClient({ libDir: process.env.ORACLEDB_INITORACLECLIENT });
 oracledb.autoCommit = true;
 ///////////////////////////////////
 
-const db_mapGetHotspotList = require("../db/db_mapGetHotspotList");
-const transposObject = require('../util/util_transposObject');
-
+const db_mapCheckSpotExistByIdSrc = require("../db/db_mapCheckSpotExistByIdSrc");
 
 // 무명함수를 이용하여 비동기함수 실행 예시
 (async ()=>{
+    const spotId = '1'
+    const src = './images/upload/image1.jpg'
+
     // 1. 데이터 조회 시도
-    const mapGetHotspotList = await db_mapGetHotspotList()
+    const mapCheckSpotExistByIdSrc = await db_mapCheckSpotExistByIdSrc(spotId,src)
 
     // 2. 행열을 변환하여 데이터를 출력합니다.
-    console.table(transposObject(mapGetHotspotList));
+    console.table(mapCheckSpotExistByIdSrc);
 })()

@@ -48,36 +48,51 @@ function createImageConainer(data) {
     reader.readAsDataURL(file);
     reader.onloadend = function () {
         // 이미지 컨테이너 생성 및 배치
-        const container = createElement({
+        const imgContainder = createElement({
             tagName : 'div',
             className : 'draggable imageHotSpot',
         })
-        dropArea.appendChild(container);
+        dropArea.appendChild(imgContainder);
 
         // 이미지 생성 및 배치
         const img = createImg({
-            imgContainer : container,
+            imgContainer : imgContainder,
             src : reader.result,
             dropX: dropX,
             dropY: dropY
         })
-        container.appendChild(img)
+        imgContainder.appendChild(img)
 
-        const btnCntainder = createElement({
+        const btnContainder = createElement({
             tagName : 'div',
             className : 'btnContainer'
         })
-        container.appendChild(btnCntainder)
+        imgContainder.appendChild(btnContainder)
 
         // 등록버튼 클릭/터치 시 기능
         const createbtnClick = ()=>{
-            const imgContainer = container;
+            const imgContainer = imgContainder;
             // sendImageDataToServer 함수를 호출하여 이미지 데이터와 위치 정보를 전송합니다.
             request_CreateHotSpot({
                 left : imgContainer.style.left,
                 top : imgContainer.style.top,
                 file : reader.result
-            });
+            }).then(succeed => {
+                // 리턴되는 promis 가 boolean 값이기 때문에, 바로 succeed 로 연결
+                if (succeed) {
+                    console.log("이미지 업로드 성공");
+                    btnContainder.remove()
+                    imgContainder.classList.remove('Active')
+                } else {
+                    console.log("이미지 업로드 실패");
+                }
+            })
+                .catch(error => {
+                    console.error("이미지 업로드 중 오류 발생:", error);
+                })
+                .finally(() => {
+                    console.log("이미지 업로드 요청 처리 완료");
+                });
         }
 
         // 등록 버튼 만들기
@@ -88,7 +103,7 @@ function createImageConainer(data) {
             onclick :createbtnClick,
             touchend:createbtnClick
         })
-        btnCntainder.appendChild(btn);
+        btnContainder.appendChild(btn);
 
     }
 }
@@ -111,7 +126,22 @@ const createBtnContainer = (imgContainder)=>{
                 top: imgContainer.style.top,
                 left: imgContainer.style.left,
                 src: imgContainer.getElementsByTagName('img')[0].src
-            })
+            }).then(succeed => {
+                    if (succeed) {
+                        console.log("이미지 업데이트 성공");
+                        btnContainder.remove()
+                        imgContainder.classList.remove('Active')
+                    } else {
+                        console.log("이미지 업데이트 실패");
+                    }
+                })
+                .catch(error => {
+                    console.error("이미지 업데이트 중 오류 발생:", error);
+                })
+                .finally(() => {
+                    console.log("이미지 업데이트 요청 처리 완료");
+                });
+
         }
         // 등록버튼 없으면 이동버튼 만들기
         const btnUpdate = createElement({

@@ -13,7 +13,6 @@ const dbConfig = require('../_dbConfig');
  * @param {number} newTop - 해당 장소의 새로운 y_position 값
  * @returns {{
  *   succeed: boolean,
- *   rowsAffected: number,
  *   error: string|Error
  * }}
  * - .succeed: 비밀번호 변경 성공 여부
@@ -35,6 +34,7 @@ async function db_mapUpdateHotspotPos(spotId, newLeft, newTop){
                 y_position = :newTop
             WHERE spot_idx = :spotId
         `;
+
         const bindData = {spotId, newLeft, newTop}
         const result = await connection.execute( sqlString, bindData );
 
@@ -42,7 +42,6 @@ async function db_mapUpdateHotspotPos(spotId, newLeft, newTop){
         // 가령 성공 여부 등
         return {
             succeed:true,
-            ...result,
             error:null
         };
     } catch (error) {
