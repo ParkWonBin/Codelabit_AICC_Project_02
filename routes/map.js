@@ -10,7 +10,8 @@ router.get('/', async (req, res) => {
     const result = await GetHotspotsFromDB();
 
     console.log(result)
-    if( result.length > 0){
+   // if( result.length > 0){
+    if (result !== null && result.length > 0) {
         const srcPath = result.map(row =>'/images/upload/'+row[0]);
         const pos_x = result.map(row =>row[1]);
         const pos_y = result.map(row =>row[2]);

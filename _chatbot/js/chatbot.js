@@ -100,7 +100,7 @@ $(document).ready(function() {
     function sendSubCategoryMessage(selectedCategory, subCategories) {
         const selectedSubCategory = subCategories.find(sub => selectedCategory.includes(sub.toLowerCase()));
         if (selectedSubCategory) {
-            setTimeout(function() {
+            setTimeout(function () {
                 appendMessage('<br>Chatbot', `<br>${selectedSubCategory}에 대한 정보를 제공합니다.`);
             }, 500);
         } else {
@@ -129,4 +129,4 @@ $(document).ready(function() {
 //             sendMessage(userMessage);
 //         }
 //     });
-// });
+});
