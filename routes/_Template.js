@@ -1,11 +1,9 @@
 const express = require('express');
-// const path = require('path')
-
 const router = express.Router();
 router.get('/', async (req, res) => {
+
     // 1. 데이터 가져오기
     // req.query, req.params, req.body, req.session 등 데이터를 가져옵니다.
-    // 조회 예시
     // const{ a,b,c } = req.body
 
     // 2. 계산식 사용
@@ -22,7 +20,9 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+
     // 1. post 로 요청받으면, 데이터를 가져오는게 시작. (아래는 예시)
+    // req.query, req.params, req.body, req.session 등 데이터를 가져옵니다.
     // const{ a,b,c } = req.body
 
     // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리

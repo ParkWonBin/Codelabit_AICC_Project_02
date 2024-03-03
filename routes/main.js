@@ -1,5 +1,4 @@
 const express = require('express');
-// const path = require('path')
 
 /**
  * main 페이지의 get 요청 담당합니다.
@@ -17,8 +16,6 @@ const router = express.Router();
 // NOTE :
 // ejs rendering 할 때, tag 에 속성값 입력 시, = 옆에 쌍따옴표 넣지 말것.
 // 이런 식으로 입력해야 정상작동하고 href=/main/CreateUser type=submit
-
-
 
 // http://localhost:3000/main
 router.get('/', (req, res) => {

@@ -1,0 +1,67 @@
+h1 {
+    text-align: center;
+    margin-top: 25px;
+}
+table {
+    width: 65%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    margin-top: 55px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 20px;
+    font-size: 17px;
+}
+
+th {
+    font-size: 19px;
+    width: 321px;
+    background-color: #83999f;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.member {
+    font-size: 18px;
+    text-align: center;
+}
+
+.content {
+    font-size: 16px;
+    padding: 20px;
+    height: 150px;
+}
+
+.comment {
+    margin-left: 20px;
+}
+
+.bottoms {
+    text-align: center;
+}
+/* 버튼 스타일 정의 */
+.button {
+    width: 86px;
+    display: inline-block;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 26px;
+    margin: 4px 22px;
+    cursor: pointer;
+    border-radius: 5px;
+
+}
+
+/* 버튼 호버 효과 */
+.button:hover {
+    background-color:#83999f;
+}

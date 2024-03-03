@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글 상세 페이지</title>
+    <style>
+        h1 {
+            text-align: center;
+            margin-top: 25px;
+        }
+        table {
+            width: 65%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            margin-top: 55px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 20px;
+            font-size: 17px;
+        }
+
+        th {
+            font-size: 19px;
+            width: 321px;
+            background-color: #83999f;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .member {
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .content {
+            font-size: 16px;
+            padding: 20px;
+            height: 150px;
+        }
+
+        .comment {
+            margin-left: 20px;
+        }
+
+        .bottoms {
+            text-align: center;
+        }
+        /* 버튼 스타일 정의 */
+        .button {
+            width: 86px;
+            display: inline-block;
+            background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 26px;
+            margin: 4px 22px;
+            cursor: pointer;
+            border-radius: 5px;
+
+        }
+
+        /* 버튼 호버 효과 */
+        .button:hover {
+            background-color:#83999f;
+        }
+    </style>
+</head>
+<body>
+<h1>게시글 상세정보</h1>
+<table>
+    <tr>
+        <th>제목</th>
+        <td class="title"><%= bulletin.title %></td>
+    </tr>
+    <tr>
+        <th>글쓴이</th>
+
+        <td class="member_id"><%= bulletin.member_id%></td>
+    </tr>
+    <tr>
+        <th>게시글 내용</th>
+        <td class="content"><%= bulletin.content %></td>
+    </tr>
+    <tr>
+        <th>작성일</th>
+        <td style="text-align: center"><%= bulletin.created_at %></td>
+    </tr>
+    <tr>
+        <th>조회수</th>
+        <td style="text-align: center"><%= bulletin.views %></td>
+    </tr>
+
+    <tr>
+        <th>댓글</th>
+        <td>
+            <% if (bulletin.comments && bulletin.comments.length > 0) { %>
+                <% bulletin.comments.forEach(comment=>{ %>
+                    <div class="comment">
+                        <p><strong><%=comment.member_id %></strong>:<%=comment.content %></p>
+                      <%  if(comment.children.length>0){ %>
+                        <div class="children">
+                            <% comment.children.forEach(child=>{ %>
+                                <div class="comment" style="">
+                                    <p><strong><%=child.member_id %></strong>:<%= child.content %> </p>
+                                </div>
+                        <%  }); %>
+                        </div>
+                        <% } %>
+                    </div>
+              <% });  %>
+            <% } else { %>
+                <p>댓글이 없습니다.</p>
+            <% } %>
+        </td>
+    </tr>
+</table>
+<!-- 이전 페이지로 돌아가기 버튼 -->
+<div class="bottoms">
+    <a href="/bulletin/" class="button">게시판</a>
+    <a href="/edit/<%= bulletin.post_id%>?member_id=<%=bulletin.member_id%>" class="button">수 정</a>
+    <a href="/addComment?postId=<%=bulletin.post_id %>&comment_id=<%=bulletin.comment_id%>" class="button">댓 글</a>\
+    <a href="/delete/<%=bulletin.post_id%>" class="button">삭제</a>
+</div>
+</body>
+</html>

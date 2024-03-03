@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko-kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilverEver 댓글 추가</title>
+    <link rel="stylesheet" href="./css/bulletinAddComment.css">
+</head>
+<body>
+<h1>댓글</h1>
+<form action="/addComment?post_id=<%=post_id%>&member_id=<%=member_id%>" method="post">
+    <div>
+        <label for="content">내용</label>
+        <textarea id="content" name="content"
+                  cols="30" rows="5" placeholder="할말이 있나요?" required></textarea>
+    </div>
+    <div class="center">
+        <input type="hidden" name="postId" value="<%= post_id %>">
+        <button type="submit">댓글 쓰기</button>
+        <a href="/bulletinDetail/<%= post_id %>" class="button">댓글 취소</a>
+    </div>
+</form>
+</body>
+</html>

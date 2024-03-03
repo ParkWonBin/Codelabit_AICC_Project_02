@@ -18,6 +18,7 @@ const imgUploadDir = path.join(__dirname, '../resources/map/images/upload');
 
 const db_mapCreateHotspot = require("../db/db_mapCreateHotspot");
 const db_mapUpdateHotspotPos =  require("../db/db_mapUpdateHotspotPos")
+const db_mapDeleteHotspot  = require('../db/db_mapDeleteHotspot')
 const saveBase64AndReturnFileNameByCurrentTime = require("../util/util_saveBase64AndReturnFileNameByCurrentTime");
 
 // 무명함수를 이용하여 비동기함수 실행 예시
@@ -44,4 +45,10 @@ const saveBase64AndReturnFileNameByCurrentTime = require("../util/util_saveBase6
     const mapdateHotspotPos = await db_mapUpdateHotspotPos(CreateHotspot.spotId,NewLeft,top);
     console.log(`이미지 이동 : ${mapdateHotspotPos.succeed? "성공" : "실패"}`)
     console.log(`이미지 이동 : ${JSON.stringify(CreateHotspot,null,2)}`)
+
+    // 5. 이미지 삭제 시도
+    console.log(`이미지 삭제 : spotId : ${CreateHotspot.spotId}`)
+    const mapDeleteHotspot = await db_mapDeleteHotspot(CreateHotspot.spotId)
+    console.log(`이미지 삭제 : ${mapDeleteHotspot.succeed? "성공" : "실패"}`)
+    console.log(`이미지 이동 : ${JSON.stringify(mapDeleteHotspot,null,2)}`)
 })()
