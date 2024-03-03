@@ -1,6 +1,15 @@
 const express = require('express');
 // const path = require('path')
 
+// 지원하는 엔드포인트
+// get : http://localhost:3000/user/
+// get : http://localhost:3000/user/logout
+// post : http://localhost:3000/user/login
+// post : http://localhost:3000/user/create
+// post : http://localhost:3000/user/update
+// post : http://localhost:3000/user/delete
+
+
 const logData = true
 const router = express.Router();
 
@@ -35,9 +44,8 @@ router.get('/logout',  (req, res) => {
     res.redirect(`/main?${queryString}`)
 });
 
-// 아래 화면에서 [로그인 버튼] 클릭 시 여기로 요청이 전달됩니다.
-// 버튼 있는 곳 : http://localhost:3000/main/login
-router.post('/', async (req, res) => {
+// 진입 : http://localhost:3000/main/login
+router.post('/login', async (req, res) => {
     if(logData){console.log('로그인 시도')}
     // 1. req.query, req.params, req.body, req.session 등 데이터를 가져옵니다.
     const{ userId,userPw } = req.body
@@ -59,9 +67,8 @@ router.post('/', async (req, res) => {
 });
 
 
-// 아래 화면에서 [회원등록 버튼] 클릭 시 여기로 요청이 전달됩니다.
-// 버튼 있는 곳 :  http://localhost:3000/main/CreateUser
-// endpoint : http://localhost:3000/user/create
+// 진입 :  http://localhost:3000/main/CreateUser
+// http://localhost:3000/user/create
 router.post('/create', async (req, res) => {
     if(logData){console.log('회원가입 시도')}
 
@@ -108,9 +115,8 @@ router.post('/create', async (req, res) => {
 });
 
 
-// 아래 화면에서 [비밀번호 변경] 버튼 클릭 시 여기로 요청이 전달됩니다.
-// 버튼 있는 곳 : http://localhost:3000/main/UpdateUser
-// endpoint : http://localhost:3000/user/update
+// 진입 : http://localhost:3000/main/UpdateUser
+// http://localhost:3000/user/update
 router.post('/update', async (req, res) => {
     if(logData){console.log('비밀번호 변경 시도')}
 
@@ -141,9 +147,8 @@ router.post('/update', async (req, res) => {
     }
 });
 
-// 아래 화면에서 [회원탈퇴 버튼] 클릭 시 여기로 요청이 전달됩니다.
-// 버튼 있는 곳 : http://localhost:3000/main/DeleteUser
-// endpoint : http://localhost:3000/user/delete
+// 진입 : http://localhost:3000/main/DeleteUser
+// http://localhost:3000/user/delete
 router.post('/delete', async (req, res) => {
     if(logData){console.log('회원탈퇴 시도')}
 

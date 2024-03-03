@@ -1,5 +1,12 @@
 const express = require('express');
 
+// 라우터에서 지원하는 앤드포인트
+// get : http://localhost:3000/main
+// get : http://localhost:3000/main/login
+// get : http://localhost:3000/main/CreateUser
+// get : http://localhost:3000/main/UpdateUser
+// get : http://localhost:3000/main/DeleteUser
+
 /**
  * main 페이지의 get 요청 담당합니다.
  * db연결이 불필요한 화면요청은 main에서 일괄적으로 관리합니다.
@@ -71,7 +78,7 @@ router.get('/login',(req,res)=>{
     res.render('main', {
         alertMsg: alertMsg,
         title: '로그인 페이지 입니다',
-        action: '/user',
+        action: '/user/login',
         method: 'post',
         inputs:[
             {name:'userId', text:'아이디', required:true},

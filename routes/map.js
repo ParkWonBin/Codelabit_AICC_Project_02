@@ -1,6 +1,12 @@
 const express = require('express');
 const path = require('path')
 
+// 라우터에서 지원하는 앤드포인트
+// get : http://localhost:3000/map
+// post : http://localhost:3000/map/create
+// post : http://localhost:3000/map/update
+// post : http://localhost:3000/map/delete
+
 // 라우팅 관련
 const router = express.Router();
 const imgUploadDir = path.join(__dirname, '../resources/map/images/upload');
@@ -15,7 +21,6 @@ const saveBase64AndReturnFileNameByCurrentTime = require('../util/util_saveBase6
 const util_deleteFileIfExists = require('../util/util_deleteFileIfExists')
 
 
-// ################################
 // http://localhost:3000/map
 router.get('/', async (req, res) => {
     // DB에서 모든 장소 목록 가져와서 뿌려주기
@@ -23,7 +28,6 @@ router.get('/', async (req, res) => {
     return res.render('map', result)
 });
 
-// ################################
 // http://localhost:3000/map/create
 // TODO : 클라이언트 코드 수정해서 장소명, 장소 주소, 지역 등 가져오도록, 세션을 통해 등록자 ID도 가져오도록.
 router.post('/create', async (req, res) => {
@@ -50,7 +54,6 @@ router.post('/create', async (req, res) => {
     return res.json(CreateHotspot)
 });
 
-// ################################
 // http://localhost:3000/map/update
 router.post('/update', async (req, res) => {
 
@@ -76,7 +79,6 @@ router.post('/update', async (req, res) => {
     return res.json(mapUpdateHotspotPos)
 });
 
-// ################################
 // http://localhost:3000/map/delete
 router.post('/delete', async (req, res) => {
 
