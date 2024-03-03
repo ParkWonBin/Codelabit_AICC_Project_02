@@ -20,7 +20,7 @@ const db_userCheckMemberExistById = require('../db/db_userCheckMemberExistById')
 const db_userCheckMemberExistByName =require('../db/db_userCheckMemberExistByName')
 const db_userUpdateMemberPasword = require('../db/db_userUpdateMemberPasword')
 const db_userDeleteMember = require('../db/db_userDeleteMember')
-const db_setDataNull= require('../db/db_setDataNull')
+const db_setDataNull= require('../db/db_util_setDataNull')
 
 router.get('/',  (req, res) => {
     // user로 진입할 일이 없을건데, 누가 호기심에 들어오면 main으로 넘겨버리기.

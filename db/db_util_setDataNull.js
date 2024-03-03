@@ -15,7 +15,7 @@ const dbConfig = require('../_dbConfig');
  * .succeed - 해당 데이터를 null 로 변경 성공 여부 <br>
  * .error - 에러여부 혹은 에러내역
  */
-const db_setDataNull = async (tableName, fieldName, dataValue) => {
+const db_util_setDataNull = async (tableName, fieldName, dataValue) => {
     let connection;
     // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
     try {
@@ -53,4 +53,4 @@ const db_setDataNull = async (tableName, fieldName, dataValue) => {
 }
 
 
-module.exports = db_setDataNull;
+module.exports = db_util_setDataNull;

@@ -2,17 +2,19 @@ const oracledb = require('oracledb');
 const dbConfig = require('../_dbConfig');
 
 /**
- * 함수의 주석을 추가합니다.
- * @author wbpark
- * @param {string} a
+ * 전체 게시글의 개수를 가져옵니다.
+ * @author (개선) wbpark
+ * @author (초안) 최원호
  * @returns {{
  * succeed:boolean,
+ * totalCount:number,
  * error:string|error
  * }}
- * .succeed - 로그인 성공 여부 <br>
+ * .succeed - 성공 여부 <br>
+ * .totalCount - 전체 포스트의 개수
  * .error - 에러여부 혹은 에러내역
  */
-const customFunc = async (a) => {
+const db_bulletinGetTotalPostCount = async () => {
     let connection;
     // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
     try {
@@ -21,7 +23,7 @@ const customFunc = async (a) => {
         connection = await oracledb.getConnection(dbConfig);
 
         // 2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sqlString = '';
+        const sqlString = 'SELECT COUNT(*) AS total FROM bulletin';
         const bindData = {}
         const result = await connection.execute(sqlString, bindData);
 
@@ -29,6 +31,7 @@ const customFunc = async (a) => {
         // 가령 성공 여부 등
         return {
             succeed: true,
+            totalCount:result.rows[0][0],
             error: null
         };
     } catch (error) {
@@ -36,6 +39,7 @@ const customFunc = async (a) => {
         console.error('오류 발생:', error);
         return {
             succeed: null,
+            totalCount:null,
             error: error
         };
     } finally {
@@ -47,4 +51,4 @@ const customFunc = async (a) => {
 }
 
 
-module.exports = customFunc;
+module.exports = db_bulletinGetTotalPostCount;

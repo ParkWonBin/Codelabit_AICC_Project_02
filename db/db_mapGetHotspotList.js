@@ -2,13 +2,7 @@ const oracledb = require('oracledb');
 const dbConfig = require('../_dbConfig');
 
 /**
- * 오라클 DB에서 핫스팟 리스트를 조회하여 반환합니다.
- *
- * 이 함수는 오라클 데이터베이스에 연결하여 'HOTSPOT' 테이블에서 핫스팟의 정보를 조회합니다.
- * 조회된 정보는 이미지 경로, X 좌표, Y 좌표, 핫스팟 ID, 핫스팟 이름, 핫스팟 주소, 지역 정보를 포함합니다.
- * 조회 결과가 있으면 해당 정보를 객체로 포맷하여 반환하고, 조회 결과가 없거나 오류가 발생한 경우,
- * 적절한 기본값 또는 오류 정보를 포함한 객체를 반환합니다.
- *
+ * @summary 이 함수는 지도에 표시할 데이터를 가져옵니다..
  * @author wbpark
  * @returns {{
  *   succeed: boolean,

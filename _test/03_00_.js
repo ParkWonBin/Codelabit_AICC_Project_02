@@ -13,14 +13,7 @@ oracledb.initOracleClient({ libDir: process.env.ORACLEDB_INITORACLECLIENT });
 oracledb.autoCommit = true;
 ///////////////////////////////////
 
-const executeQuery = require('../db/db_util_executeQuery.js');
-
 // 무명함수를 이용하여 비동기함수 실행 예시
-(async () => {
-
-    const result1 = await executeQuery(`SELECT COUNT(*) as count FROM member`)
-    console.log('member count : '+ result1.rows[0][0]);
-
-    const result2 = await executeQuery(`SELECT * FROM member WHERE ROWNUM <= 5`)
-    console.table(result2.rows);
-})();
+(async ()=>{
+    // 내용 구현
+})()

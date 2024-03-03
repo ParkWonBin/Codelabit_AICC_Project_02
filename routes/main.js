@@ -39,7 +39,7 @@ router.get('/', (req, res) => {
             buttons:[
                 {tagName:'a', attr:`href=/map`, text:'둘러보기'},
                 {tagName:'a', attr:`href=/main/mypage`, text:'마이페이지'},
-                {tagName:'a', attr:`href=/board`, text:'게시판'},
+                {tagName:'a', attr:`href=/bulletin`, text:'게시판'},
                 {tagName:'a', attr:`href=/user/logout`, text:'로그아웃'}
             ]
         })
@@ -51,7 +51,7 @@ router.get('/', (req, res) => {
             buttons:[
                 {tagName:'a', attr:`href=/map`, text:'둘러보기'},
                 {tagName:'a', attr:`href=/main/login`, text:'로그인'},
-                {tagName:'a', attr:`href=/board`, text:'게시판'}
+                {tagName:'a', attr:`href=/bulletin`, text:'게시판'}
             ]
         })
     }

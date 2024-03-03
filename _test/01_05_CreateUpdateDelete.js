@@ -18,7 +18,7 @@ const db_userCheckMemberExistById = require("../db/db_userCheckMemberExistById")
 const db_userCheckMemberExistByName = require("../db/db_userCheckMemberExistByName");
 const db_userCreateMember = require("../db/db_userCreateMember");
 const db_userUpdateMemberPasword = require("../db/db_userUpdateMemberPasword");
-const db_setDataNull = require("../db/db_setDataNull");
+const db_setDataNull = require("../db/db_util_setDataNull");
 const db_userDeleteMember = require("../db/db_userDeleteMember");
 
 // 무명함수를 이용하여 비동기함수 실행 예시

@@ -14,7 +14,7 @@ oracledb.initOracleClient({ libDir: process.env.ORACLEDB_INITORACLECLIENT });
 oracledb.autoCommit = true;
 ///////////////////////////////////
 
-const db_setDataNull = require("../db/db_setDataNull");
+const db_setDataNull = require("../db/db_util_setDataNull");
 const db_userDeleteMember = require("../db/db_userDeleteMember");
 
 // 무명함수를 이용하여 비동기함수 실행 예시
