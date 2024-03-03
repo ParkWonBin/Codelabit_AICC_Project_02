@@ -155,7 +155,7 @@ router.post('/delete', async (req, res) => {
     // 2.1. 비밀번호가 틀렸는지 확인(세션의 id와 집력한 pw로 로그인 요청을 보내서 성공하는지 확인)
     const userLogin = await db_userLogin(userId,userPw)
     if(!userLogin.succeed){
-        return res.redirect('/main/DeleteUser/delete?alertMsg=[현재 비밀번호]가 틀렸습니다.')
+        return res.redirect('/main/DeleteUser?alertMsg=[현재 비밀번호]가 틀렸습니다.')
     }
 
     // 2.2. 관련된 테이블에서 행에 작업 시도

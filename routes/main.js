@@ -29,24 +29,25 @@ router.get('/', (req, res) => {
     // 로그인 여부에 따라 페이지 보여주기
     if(memberName){
         //로그인인 된 상태
-        res.render('mainLayout', {
+        res.render('main', {
             alertMsg : alertMsg,
             title: `${memberName}님 환영합니다.`,
-            data: [
-                {href: '/map', text: '둘러보기'},
-                {href: '/main/mypage', text: '마이페이지'},
-                {href: '/board', text: '게시판'}
+            buttons:[
+                {tagName:'a', attr:`href=/map`, text:'둘러보기'},
+                {tagName:'a', attr:`href=/main/mypage`, text:'마이페이지'},
+                {tagName:'a', attr:`href=/board`, text:'게시판'},
+                {tagName:'a', attr:`href=/user/logout`, text:'로그아웃'}
             ]
         })
     }else{
         // 로그인 안된 상태
-        res.render('mainLayout', {
+        res.render('main', {
             alertMsg : alertMsg,
             title: '메인페이지 입니다.',
-            data: [
-                {href: '/map', text: '둘러보기'},
-                {href: '/main/login', text: '로그인'},
-                {href: '/board', text: '게시판'}
+            buttons:[
+                {tagName:'a', attr:`href=/map`, text:'둘러보기'},
+                {tagName:'a', attr:`href=/main/login`, text:'로그인'},
+                {tagName:'a', attr:`href=/board`, text:'게시판'}
             ]
         })
     }
@@ -54,13 +55,13 @@ router.get('/', (req, res) => {
 
 // http://localhost:3000/main/mypage
 router.get('/mypage', (req, res) => {
-    res.render('mainLayout', {
+    res.render('main', {
         alertMsg : null,
         title: '회원정보 페이지 입니다.',
-        data: [
-            {href: '/main', text: '처음으로'},
-            {href: '/main/UpdateUser', text: '비밀번호변경'},
-            {href: '/main/DeleteUser', text: '회원탈퇴'}
+        buttons:[
+            {tagName:'a', attr:`href=/main`, text:'처음으로'},
+            {tagName:'a', attr:`href=/main/UpdateUser`, text:'비밀번호변경'},
+            {tagName:'a', attr:`href=/main/DeleteUser`, text:'회원탈퇴'}
         ]
     })
 });
@@ -70,7 +71,7 @@ router.get('/login',(req,res)=>{
     const alertMsg = (req.query.alertMsg)? req.query.alertMsg : null
 
     // url 쿼리로 로그인 실패 여부를 전달해주면 로그인 실패 페이지 띄워주기
-    res.render('mainForm', {
+    res.render('main', {
         alertMsg: alertMsg,
         title: '로그인 페이지 입니다',
         action: '/user',
@@ -90,7 +91,7 @@ router.get('/login',(req,res)=>{
 router.get('/CreateUser',(req,res)=>{
     const alertMsg = (req.query.alertMsg)? req.query.alertMsg : null
 
-    res.render('mainForm', {
+    res.render('main', {
         alertMsg: alertMsg,
         title: '회원가입 페이지 입니다',
         action: '/user/create',
@@ -112,7 +113,7 @@ router.get('/CreateUser',(req,res)=>{
 router.get('/UpdateUser',(req,res)=>{
     const alertMsg = (req.query.alertMsg)? req.query.alertMsg : null
 
-    res.render('mainForm', {
+    res.render('main', {
         alertMsg: alertMsg,
         title: '비밀번호를 변경합니다',
         action: '/user/update',
@@ -133,7 +134,7 @@ router.get('/UpdateUser',(req,res)=>{
 router.get('/DeleteUser',(req,res)=>{
     const alertMsg = (req.query.alertMsg)? req.query.alertMsg : null
 
-    res.render('mainForm', {
+    res.render('main', {
         alertMsg: alertMsg,
         title: '회원탈퇴 페이지 입니다',
         action: '/user/delete',
