@@ -35,7 +35,8 @@ const db_bulletinGetCommentsByPostId = async (postId) => {
 
         // 2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
         const sqlString = `
-            SELECT c.writer_id                         AS writerId,
+            SELECT c.comment_id                        AS commentId,
+                   c.writer_id                         AS writerId,
                    m.member_name                       AS writerName,
                    TO_CHAR(c.created_at, 'YYYY-MM-DD') AS created_at,
                    c.content,
@@ -52,7 +53,8 @@ const db_bulletinGetCommentsByPostId = async (postId) => {
         // 트리구조로 변환하는 함수 생성
         const createCommentsTree = (rows) => {
             // 오브젝트 구조로 변환
-            const comments = rows.map(([writerId, writerName, created_at, content, parent_comment_id]) => ({
+            const comments = rows.map(([commentId, writerId, writerName, created_at, content, parent_comment_id]) => ({
+                commentId,
                 writerId,
                 writerName,
                 created_at,
@@ -60,17 +62,18 @@ const db_bulletinGetCommentsByPostId = async (postId) => {
                 parent_comment_id,
                 children: [],
             }));
+            // console.log(comments)
 
             // 검색을 위한 매핑관계 생성
             const commentMap = {};
             comments.forEach(comment => {
-                commentMap[comment.writerId] = comment;
+                commentMap[parseInt(comment.commentId)] = comment;
             });
-
+            // console.log(commentMap)
             // 노드 연결
             const rootComments = [];
             comments.forEach(comment => {
-                if (comment.parent_comment_id) {
+                if (comment.parent_comment_id && commentMap[comment.parent_comment_id]) {
                     commentMap[comment.parent_comment_id].children.push(comment);
                 } else {
                     rootComments.push(comment);

@@ -6,8 +6,6 @@
     <link rel="stylesheet" href="/bulletin/css/bulletinDetail.css">
     <%- alertMsg? `<script>alert("${alertMsg}")</script>` : '' %>
     <title><%= title %></title>
-    <style>
-    </style>
 </head>
 <body>
 
@@ -27,16 +25,33 @@
     <div class="post-comments">
         <h3 class="post-title">댓글</h3>
         <% if (commentTree && commentTree.length > 0) { %>
-            <% commentTree.forEach(comment => { %>
-                <div class="comment">
-                    <p class="post-author"><strong><%= comment.writerName %></strong></p>
-                    <p><%= comment.content %></p>
-                </div>
-            <% }); %>
+            <% const renderComments = (comments) => { %>
+                <% comments.forEach(comment => { %>
+                    <div class="comment">
+                        <p class="post-author"><strong>@<%= comment.commentId %> : <%= comment.writerName %>(<%= comment.writerId %>)</strong></p>
+                        <p><%= comment.content %></p>
+                        <% if (comment.children && comment.children.length > 0) { %>
+                            <div class="child-comments">
+                                <% renderComments(comment.children); %>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }); %>
+            <% } %>
+            <% renderComments(commentTree); %>
         <% } else { %>
             <p>댓글이 없습니다.</p>
         <% } %>
     </div>
+
+
+     <!-- 댓글 입력 폼 -->
+    <form id="commentForm" action="/bulletin/addComment" method="post" class="post-comments">
+        <input style="display:none" name="postId" value="<%= postId %>">
+        <textarea name="comment" rows="4" cols="50" placeholder="댓글을 입력하세요"></textarea><br>
+        <button type="submit">댓글 등록</button>
+    </form>
+
 </div>
 
 <!--  이전 게시판으로 돌아가기 -->

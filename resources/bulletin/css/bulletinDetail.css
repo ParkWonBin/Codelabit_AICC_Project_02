@@ -6,7 +6,7 @@
 }
 
 .post-content {
-    border: 1px solid #ddd;
+    border: 3px solid #bbb;
     border-radius: 4px;
     background-color: #fff;
     padding: 15px;
@@ -29,16 +29,20 @@
 }
 
 .post-comments {
-    border: 1px solid #ddd;
+    border: 2px solid #bbb;
     border-radius: 4px;
     background-color: #fff;
     padding: 15px;
+    margin-bottom: 15px;
 }
 
 .comment {
+    padding-left: 15px;
+    border-left: #bbb 3px solid;
+    margin-left: 10px;
     border-top: 1px solid #ddd;
-    padding-top: 10px;
-    margin-top: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .bottoms {
@@ -73,4 +77,20 @@
 /* 버튼 호버 효과 */
 .button:hover {
     background-color:#83999f;
+}
+
+#commentForm{
+    display: flex;
+}
+#commentForm >textarea {
+    flex: 5;
+}
+#commentForm >button{
+    flex: 1;
+    background-color:#eee;
+    margin-left: 15px;
+
+}
+#commentForm >button:hover{
+    background-color:#ddd;
 }

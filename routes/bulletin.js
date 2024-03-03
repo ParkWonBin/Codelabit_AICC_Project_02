@@ -1,5 +1,6 @@
 const express = require('express');
 const transposObject = require("../util/util_transposObject");
+const extractNumFromAtChar = require('../util/util_extractNumFromAtChar')
 const db_bulletinGetTotalPostCount = require("../db/db_bulletinGetTotalPostCount");
 const db_bulletinGetPostList = require("../db/db_bulletinGetPostList");
 const db_bulletinUpdatePostViewByPostId = require("../db/db_bulletinUpdatePostViewByPostId");
@@ -8,7 +9,7 @@ const db_bulletinGetCommentsByPostId = require("../db/db_bulletinGetCommentsByPo
 const db_bulletinCreatePost = require("../db/db_bulletinCreatePost");
 const db_bulletinUpdatePost = require('../db/db_bulletinUpdatePost')
 const db_bulletinDeletePost = require('../db/db_bulletinDeletePost')
-
+const db_bulletinCreateComments = require('../db/db_bulletinCreateComments')
 // 라우터의 엔드포인트 목록
 // get : http://localhost:3000/bulletin
 // get : http://localhost:3000/bulletin/Detail/:postId
@@ -72,20 +73,37 @@ router.get('/Detail/:postId', async (req, res) => {
     const postId = req.params.postId;
     const userId = req.session.memberId; //본인이 작성한 글만 수정/ 삭제할 수 있게 하기 위함
 
+    // 로그인 안한 유저 팅겨내기
+    if(!userId){
+        return res.redirect(`/main/login`)
+    }
+
+
+    // 게시글 번호가 입력되지 않은 경우  게시판으로 이동
+    if(!postId){
+        return res.redirect(`/bulletin?alertMsg=게시물을 찾을 수 없습니다.`)
+    }
+
     // 조회수 추가
     const bulletinUpdatePostViewByPostId = await db_bulletinUpdatePostViewByPostId(postId);
     console.log(bulletinUpdatePostViewByPostId);
 
     // 게시글 조회
     const bulletinGetPostByPostId = await db_bulletinGetPostByPostId(postId);
+    if(!bulletinGetPostByPostId.succeed){
+        // 게시글이 찾아지지 않는 경우
+        return res.redirect(`/bulletin?alertMsg=게시물을 찾을 수 없습니다.`)
+    }
     console.log(bulletinGetPostByPostId);
 
     //해당 계시글의 댓글 조회
     const bulletinGetCommentsByPostId = await db_bulletinGetCommentsByPostId(postId);
     console.log((bulletinGetCommentsByPostId.commentTree))
 
-    // 개행 문자가 결과 화면에 처리되지 않는 것 같아서 정규식으로 replace
-    bulletinGetPostByPostId.content = bulletinGetPostByPostId.content.replace(/\r?\n/g, '<br>')
+    // 개행 문자 처리를 위해 정규식으로 <br> replace
+    if(bulletinGetPostByPostId.succeed){
+        bulletinGetPostByPostId.content = bulletinGetPostByPostId.content.replace(/\r?\n/g, '<br>')
+    }
 
     // 페이지 표시
     return res.render('bulletinDetail', {
@@ -196,8 +214,19 @@ router.post('/delete/:postId', async (req, res) => {
 });
 
 // http://localhost:3000/bulletin/addComment
-router.post('/addComment/:commentId', async (req, res) => {
+router.post('/addComment', async (req, res) => {
+    const userId = req.session.memberId;
+    const postId = req.body.postId;
+    const commentContent = req.body.comment
+    console.log({postId,commentContent})
 
+    // @ 표시뒤에 문자열을 추출합니다.
+    const parentId = extractNumFromAtChar(commentContent)
+    console.log({userId,postId,commentContent,parentId})
+    const addComment = await db_bulletinCreateComments(userId,postId,commentContent,parentId);
+    console.log(addComment)
+
+    return res.redirect(`/bulletin/Detail/${postId}`)
 });
 
 // http://localhost:3000/bulletin/deleteComment

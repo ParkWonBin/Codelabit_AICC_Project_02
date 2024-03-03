@@ -54,23 +54,37 @@ const db_bulletinGetPostByPostId = async (postId) => {
 
         // 3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
         // 가령 성공 여부 등
-        return {
-            succeed: true,
-            postId: postId,
-            title: result.rows[0][0],
-            writerId: result.rows[0][1],
-            writerName: result.rows[0][2],
-            content: result.rows[0][3],
-            created_at: result.rows[0][4],
-            views: result.rows[0][5],
-            error: null
-        };
+        if(result.rows.length>0){
+            return {
+                succeed: true,
+                postId: postId,
+                title: result.rows[0][0],
+                writerId: result.rows[0][1],
+                writerName: result.rows[0][2],
+                content: result.rows[0][3],
+                created_at: result.rows[0][4],
+                views: result.rows[0][5],
+                error: null
+            };
+        }else{
+            return {
+                succeed: false,
+                postId: postId,
+                title: null,
+                writerId: null,
+                writerName: null,
+                content: null,
+                created_at: null,
+                views: null,
+                error: '조회되지 않습니다.'
+            };
+        }
     } catch (error) {
         // 4. 에러가 발생하면 어떤 에러인지 서버에 기록.
         console.error('오류 발생:', error);
         return {
             succeed: null,
-            postId: null,
+            postId: postId,
             title: null,
             writerId: null,
             writerName: null,
