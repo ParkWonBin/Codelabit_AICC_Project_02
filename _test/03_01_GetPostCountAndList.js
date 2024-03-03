@@ -20,7 +20,7 @@ const db_bulletinGetPostList = require('../db/db_bulletinGetPostList');
 (async ()=>{
 
     // 사용자 설정 영역
-    const currentPage = 3
+    const currentPage = 1
     const postsPerPage = 5;
 
     // 전체 게시글 확인

@@ -1,66 +1,75 @@
-h1 {
-    text-align: center;
-    margin-top: 25px;
-}
-table {
-    width: 65%;
+.post-container {
     margin: 20px auto;
-    border-collapse: collapse;
-    margin-top: 55px;
+    width: 65%;
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
 }
 
-th, td {
+.post-content {
     border: 1px solid #ddd;
-    padding: 20px;
-    font-size: 17px;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
 }
 
-th {
-    font-size: 19px;
-    width: 321px;
-    background-color: #83999f;
-}
-
-.title {
-    font-size: 24px;
+.post-title {
     font-weight: bold;
-    text-align: center;
+    margin-bottom: 10px;
 }
 
-.member {
-    font-size: 18px;
-    text-align: center;
+.post-author {
+    margin-bottom: 5px;
+    color: #666;
 }
 
-.content {
-    font-size: 16px;
-    padding: 20px;
-    height: 150px;
+.post-date {
+    color: #666;
+    font-size: 12px;
+}
+
+.post-comments {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 15px;
 }
 
 .comment {
-    margin-left: 20px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    margin-top: 10px;
 }
 
 .bottoms {
-    text-align: center;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    width: 65%;
 }
 /* 버튼 스타일 정의 */
 .button {
-    width: 86px;
-    display: inline-block;
+    display: inline;
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
     color: white;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
     font-size: 26px;
-    margin: 4px 22px;
     cursor: pointer;
     border-radius: 5px;
-
+    border: none;
+    outline: none;
+    flex: 1; /* 같은 크기로 설정 */
+    margin: 0 15px; /* 좌우 간격 설정 */
 }
-
+.button:first-child {
+    margin-left: 0;
+}
+.button:last-child {
+    margin-right: 0;
+}
 /* 버튼 호버 효과 */
 .button:hover {
     background-color:#83999f;

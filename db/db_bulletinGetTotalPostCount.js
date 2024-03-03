@@ -2,7 +2,7 @@ const oracledb = require('oracledb');
 const dbConfig = require('../_dbConfig');
 
 /**
- * 전체 게시글의 개수를 가져옵니다.
+ * @summary 전체 게시글의 개수를 가져옵니다.
  * @author (개선) wbpark
  * @author (초안) 최원호
  * @returns {{
@@ -10,9 +10,10 @@ const dbConfig = require('../_dbConfig');
  * totalCount:number,
  * error:string|error
  * }}
- * .succeed - 성공 여부 <br>
- * .totalCount - 전체 포스트의 개수
- * .error - 에러여부 혹은 에러내역
+ * @description
+ * .succeed: 성공 여부 <br>
+ * .totalCount: 전체 포스트의 개수<br>
+ * .error: 에러여부 혹은 에러내역
  */
 const db_bulletinGetTotalPostCount = async () => {
     let connection;

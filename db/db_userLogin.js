@@ -40,8 +40,8 @@ const db_userLogin = async (memberId, memberPw) => {
         if (result.rows.length > 0) {
             return {
                 succeed: true,
-                memberNum: result.rows[0][1],
-                memberId: result.rows[0][0],
+                memberNum: result.rows[0][0],
+                memberId: result.rows[0][1],
                 memberName: result.rows[0][2],
                 memberRole: result.rows[0][3],
                 error: null

@@ -2,14 +2,14 @@ const oracledb = require('oracledb');
 const dbConfig = require('../_dbConfig');
 
 /**
- * @summary 함수의 주석을 추가합니다.
+ * 함수의 주석을 추가합니다.
  * @author wbpark
  * @param {string} a
  * @returns {{
  * succeed:boolean,
  * error:string|error
  * }}
- * .succeed - 작업 성공 여부 <br>
+ * .succeed - 로그인 성공 여부 <br>
  * .error - 에러여부 혹은 에러내역
  */
 const customFunc = async (a) => {

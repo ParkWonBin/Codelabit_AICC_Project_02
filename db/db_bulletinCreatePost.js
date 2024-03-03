@@ -2,17 +2,20 @@ const oracledb = require('oracledb');
 const dbConfig = require('../_dbConfig');
 
 /**
- * @summary 함수의 주석을 추가합니다.
+ * 함수의 주석을 추가합니다.
  * @author wbpark
- * @param {string} a
+ * @param {number} writerId
+ * @param {string} postTitle
+ * @param {string} postContent
  * @returns {{
  * succeed:boolean,
+ * postId:number
  * error:string|error
  * }}
- * .succeed - 작업 성공 여부 <br>
+ * .succeed - 로그인 성공 여부 <br>
  * .error - 에러여부 혹은 에러내역
  */
-const customFunc = async (a) => {
+const db_bulletinCreatePost = async (writerId, postTitle, postContent) => {
     let connection;
     // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
     try {
@@ -21,14 +24,20 @@ const customFunc = async (a) => {
         connection = await oracledb.getConnection(dbConfig);
 
         // 2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sqlString = '';
-        const bindData = {}
+        const postId = (await connection.execute(`SELECT bulletin_seq.nextval FROM dual`)).rows[0][0];
+
+        const sqlString = `
+            insert into bulletin (post_id, writer_id, title, content)
+            values (:postId, :writerId, :postTitle, :postContent)
+        `;
+        const bindData = {postId, writerId, postTitle, postContent}
         const result = await connection.execute(sqlString, bindData);
 
         // 3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
-        // 가령 성공 여부 등
+
         return {
-            succeed: true,
+            succeed: result.rowsAffected > 0,
+            postId: postId,
             error: null
         };
     } catch (error) {
@@ -36,6 +45,7 @@ const customFunc = async (a) => {
         console.error('오류 발생:', error);
         return {
             succeed: null,
+            postId:null,
             error: error
         };
     } finally {
@@ -47,4 +57,4 @@ const customFunc = async (a) => {
 }
 
 
-module.exports = customFunc;
+module.exports = db_bulletinCreatePost;
