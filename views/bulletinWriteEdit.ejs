@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> <%= pageTitle %> </title>
+    <link rel="stylesheet" href="./css/bulletinWriteEdit.css">
+
+</head>
+<body>
+
+<form action="<%= formAction %>" method="<%= formMethod %>">
+
+    <h1><%= pageTitle %></h1>
+
+    <label for="title">제목</label>
+    <input type="text" id="title" name="title" value="<%= postTitle %>">
+
+    <label for="content">내용</label>
+    <textarea id="content" name="content" rows="15" cols="50" ><%= content %></textarea>
+    <br>
+
+    <div class="button-group">
+        <a href="/bulletin">게시판</a>
+        <input type="submit" value="작성하기">
+    </div>
+
+</form>
+
+</body>
+</html>
