@@ -70,7 +70,7 @@ NOCYCLE;
 CREATE TABLE comments (
   comment_id NUMBER,
   post_id NUMBER NOT NULL,
-  writer_id varchar2(50) NOT NULL,
+  writer_id varchar2(50),
   content varchar2(140),
   created_at TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
   parent_comment_id NUMBER,

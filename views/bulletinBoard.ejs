@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko-kr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./css/bulletinBoard.css">
+    <%- alertMsg? `<script>alert("${alertMsg}")</script>` : '' %>
+</head>
+<body>
+
+
+<!-- 게시판 머리말 영역 -->
+<div class="head">
+    <h2>게시판</h2>
+    <span>
+    <a href="/bulletin/write" class="button">✎ 글쓰기</a>
+    <a href="/" class="button" style="background-color:blue"> 처음으로 </a>
+    </span>
+</div>
+
+<!-- 게시글 표시 영역 -->
+<table>
+    <thead><tr><th>제목</th><th>글쓴이</th><th>등록일</th><th>조회수</th></tr></thead>
+<tbody>
+    <% for (let k=0; k<postId.length;k++){ %>
+        <tr>
+            <td><a href="/bulletin/Detail/<%= postId[k] %>" class="post-link"><%= title[k] %>[<%= comments_count[k] %>]</a></td>
+            <td><%= writerName[k] %>(<%= writerId[k] %>)</td>
+            <td><%= created_at[k] %></td>
+            <td><%= views[k] %></td>
+        </tr>
+    <% } %>
+</tbody>
+</table>
+
+<!-- 다음 페이지 영역 -->
+<div class="paging">
+    <% if (currentPage > 1) { %>
+        <a href="./?page=<%= currentPage - 1 %>"><이전 페이지></a>
+    <% } %>
+
+    <% for (let k = startPage; k <= endPage; k++) { %>
+        <% if (k === currentPage) { %>
+            <span class="current-page"><%= k %></span>
+        <% } else { %>
+            <a href="./?page=<%= k %>"><%= k %></a>
+        <% } %>
+    <% } %>
+
+    <!-- 현재 페이지에서 한 화면에 처리하는 페이지 갯수 보다 하나라도 더 많으면 다음 링크로 이동할 수 있는 조건   -->
+    <% if ( (totalPage - currentPage +1) > maxPageNumber ) { %>
+        <a href="./?page=<%= currentPage + 1 %>"><다음 페이지></a>
+    <% } %>
+</div>
+
+
+</body>
+</html>

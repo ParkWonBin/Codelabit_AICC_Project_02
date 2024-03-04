@@ -1,88 +1,108 @@
 const express = require('express');
 const path = require('path')
-const oracledb = require('oracledb');
-const dbConfig = require('../_dbConfig');
 
+// 라우터에서 지원하는 앤드포인트
+// get : http://localhost:3000/map
+// post : http://localhost:3000/map/create
+// post : http://localhost:3000/map/update
+// post : http://localhost:3000/map/delete
+
+// 라우팅 관련
 const router = express.Router();
+const imgUploadDir = path.join(__dirname, '../resources/map/images/upload');
 
+const db_mapGetHotspotList = require('../db/db_mapGetHotspotList')
+const db_mapCreateHotspot = require('../db/db_mapCreateHotspot')
+const db_mapUpdateHotspotPos = require('../db/db_mapUpdateHotspotPos')
+const db_mapDeleteHotspot = require('../db/db_mapDeleteHotspot')
+const db_mapCheckSpotExistByIdSrc = require('../db/db_mapCheckSpotExistByIdSrc')
+
+const saveBase64AndReturnFileNameByCurrentTime = require('../util/util_saveBase64AndReturnFileNameByCurrentTime');
+const util_deleteFileIfExists = require('../util/util_deleteFileIfExists')
+
+
+// http://localhost:3000/map
 router.get('/', async (req, res) => {
-    // 브라우저 주소창으로 접근했을 때 어떤 페이지 보여줄지 쓰기
-    const result = await GetHotspotsFromDB();
-
-    console.log(result)
-   // if( result.length > 0){
-    if (result !== null && result.length > 0) {
-        const srcPath = result.map(row =>'/images/upload/'+row[0]);
-        const pos_x = result.map(row =>row[1]);
-        const pos_y = result.map(row =>row[2]);
-        const spot_id = result.map(row =>row[3]);
-        const spot_name = result.map(row =>row[4]);
-        const spot_address = result.map(row =>row[5]);
-        const region = result.map(row =>row[6]);
-        console.log("여기는 오냐?")
-        console.log(JSON.stringify({ srcPath, pos_x,pos_y,spot_id,spot_name,spot_address,region }))
-        res.render('map2',{ srcPath, pos_x,pos_y,spot_id,spot_name,spot_address,region })
-    }else {
-        res.render('map2',{
-            'srcPath':[],
-            'pos_x':[],
-            'pos_y':[],
-            'spot_id':[],
-
-        })
-    }
+    // DB에서 모든 장소 목록 가져와서 뿌려주기
+    const result = await db_mapGetHotspotList();
+    return res.render('map', result)
 });
 
+// http://localhost:3000/map/create
+// TODO : 클라이언트 코드 수정해서 장소명, 장소 주소, 지역 등 가져오도록, 세션을 통해 등록자 ID도 가져오도록.
+router.post('/create', async (req, res) => {
+    console.log('장소 등록 시도')
+    console.log('req.body : ' + JSON.stringify(req.body, (key, value) => {
+        return (typeof value === "string" && value.length > 30) ? value.substring(0, 30) + "..." : value;
+    }, 2));
 
-router.post('/', async (req, res) => {
-    // 1. post 로 요청받으면, 데이터를 가져오는게 시작. (아래는 예시)
-    // const{ a,b,c } = req.body
+    // 1. req.query, req.params, req.body, req.session 등 데이터를 가져옵니다.
+    const sportName = 'test'
+    const base64Data = req.body.base64Data
+    const top = req.body.top.replace('vh', '')
+    const left = req.body.left.replace('vw', '')
 
-    // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리
-    // const result = GetHotspotsFromDB()
-
-    // 3. DB 요청 결과를 통해 어떤 화면과 연결시킬지 판단 및 결정.
-    // res.render('', {})
-});
-const getImgSrc ='imgag.png'
-// 4. DB 연결과 관련된 부분은 함수로 분리해서 따로 관리합니다.
-async function GetHotspotsFromDB(){
-    let connection;
-    try {
-        // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
-
-       // 4.1. DB에 연결합니다. (연결정보는 dbConfig 사용)
-        connection = await oracledb.getConnection(dbConfig);
-
-        // 4.2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sql_string =  'SELECT image_path, x_position, y_position, spot_idx, spot_name ,spot_address, region from HOTSPOT';
-        const result = await connection.execute( sql_string );
-
-        console.log(result.rows);
-        // 4.3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
-        if(result.rows.length>0){
-            return result.rows;
-        }else{
-            console.log("조회 결과가... 없어요 ㅠㅠ")
-            return [];
-        }
-    } catch (error) {
-        // 4.4. 에러가 발생하면 어떤 에러인지 서버에 기록.
-        console.error('오류 발생:', error);
-
-        // 4.5. 에러 메시지를 통해 어떤 상황에서 어떻게 대처할지를 판단.
-        if(error.message.includes("unique constraint")){
-             return null;
-        }else {
-             return null
-        }
-    } finally {
-        // DB 연결 해제(try에서 return 하면, finally에 있는 코드 수행 후 return 됨)
-        if (connection) {
-            await connection.close();
-        }
+    // 2. 이미지 저장 시도
+    const saveFile = saveBase64AndReturnFileNameByCurrentTime(base64Data, imgUploadDir)
+    if (!saveFile.succeed) {
+        // 2.1. 파일 저장에 실패한 경우 해당 내용 반환
+        return res.json(saveFile)
     }
-}
 
+    // 3. db 등록 후 전달
+    const CreateHotspot = await db_mapCreateHotspot(saveFile.fileName, sportName, top, left)
+    return res.json(CreateHotspot)
+});
+
+// http://localhost:3000/map/update
+router.post('/update', async (req, res) => {
+
+    // 1. req.query, req.params, req.body, req.session 등 데이터를 가져옵니다.
+    // const {spotId, src, newLeft, newTop} = req.body
+    const src = path.basename(req.body.src)
+    const spotId = parseInt(req.body.spotId)
+    const newLeft = parseInt(req.body.newLeft)
+    const newTop = parseInt(req.body.newTop)
+    console.log({src,spotId,newTop,newLeft})
+
+    // 2. 처리
+    // 2.1. 해당 spotid에 해당 파일명으로 데이터가 있는지 검증. (페이로드 변조 아닌지)
+    const mapCheckSpotExist = await db_mapCheckSpotExistByIdSrc(spotId, src)
+    if(!mapCheckSpotExist.spotExist){
+        // id 와 src(정확히는 파일명)이 일치하지 않는 경우, 파일 삭제를 시도하지 않고 배용 반환
+        console.log(`해당 spotId(${spotId}), src(${src})의 파일명과 일치하는 데이터가 DB에 없습니다.`)
+        return res.json(mapCheckSpotExist)
+    }
+
+    // 2.2. 해당 spot 위치 변경
+    const mapUpdateHotspotPos = await db_mapUpdateHotspotPos(spotId, newLeft, newTop);
+    return res.json(mapUpdateHotspotPos)
+});
+
+// http://localhost:3000/map/delete
+router.post('/delete', async (req, res) => {
+
+    // 1. req.query, req.params, req.body, req.session 등 데이터를 가져옵니다.
+    const spotId = parseInt(req.body.spotId)
+    const src = path.basename(req.body.src)
+    console.log({src,spotId})
+
+    // 2. 해당 spotid에 해당 파일명으로 데이터가 있는지 검증. (페이로드 변조 아닌지)
+    const mapCheckSpotExist = await db_mapCheckSpotExistByIdSrc(spotId, src)
+    if(!mapCheckSpotExist.spotExist){
+        // id 와 src(정확히는 파일명)이 일치하지 않는 경우, 파일 삭제를 시도하지 않고 배용 반환
+        console.log(`해당 spotId(${spotId}), src(${src})의 파일명과 일치하는 데이터가 DB에 없습니다.`)
+        return res.json(mapCheckSpotExist)
+    }
+
+    // 3. 해당 spot 삭제 시도
+    const mapDeleteHotspot = await db_mapDeleteHotspot(spotId);
+    if(mapDeleteHotspot.succeed){
+        // DB에서 팡리 삭제 성공 시, 실재 파일 삭제하기
+        const deleteFile = util_deleteFileIfExists(path.join(imgUploadDir, src))
+        console.log(`파일 삭제 ${deleteFile? '성공' :'실패'}`)
+    }
+    return res.json(mapDeleteHotspot)
+});
 
 module.exports = router;

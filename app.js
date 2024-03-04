@@ -1,4 +1,4 @@
-// .env 파일에서 환경변수 설정하기
+// .env 파일에서 환경변수 설정합니다.
 require('dotenv').config();
 
 // 세팅된 웹서버 가져오기
@@ -6,53 +6,14 @@ const app = require('./_initSetting')
 const port = 3000;
 
 // 라우팅 함수를 미들웨어(Middleware)로 처리
-// app.use('/', require('./routes/index'));
-app.use('/login', require('./routes/login'));
-app.use('/userCreate', require('./routes/userCreate'));
+// NOTE: static 경로의 폴더 내 index.html이 있으면, 해당 폴더명으로 get 진입했을 때 index.html을 보내줍니다.
+// WARN: 아래 라우터에서 get처리를 하고자 한다면, static 경로 내 index.html 파일과 엔드포인트가 겹치지 않게 주의합니다.
+// Example : http://localhost:3000/chatbot의 경우 라우터 대신 static 경로 내 index파일로 처리합니다.
+app.get('/',(req,res)=>{res.redirect('/main')})
+app.use('/main', require('./routes/main'));
+app.use('/user', require('./routes/user'));
 app.use('/map', require('./routes/map'));
-app.use('/mapImageUpload', require('./routes/mapImageUpload'));
-app.use('/mapDelete', require('./routes/mapSpotDelete'));
-// app.use('/userManage', require('./routes/userManage'));
-app.use('/pwChange', require('./routes/pwChange'));
-app.use('/userDelete', require('./routes/userDelete'));
-app.use('/mapUpdate', require('./routes/mapSpotUpdate'));
-// app.use('/mapImageUpload', require('./routes/mapImageUpload'));
-app.use('/chatbot', require('./routes/chatbot'));
-// app.use('/boardMain', require('./routes/boardMain'));
-app.use('/logout', require('./routes/logout'));
-
-
-
-
-app.get('/', async (req, res) => {
-    let conn;
-    try {
-       conn = await oracledb.getConnection(dbConfig);
-        let info_bulletin=await conn.execute(
-           `SELECT  writer, title, to_char(created_at,'YYYY-MM-DD'), views
-                FROM (
-                    SELECT  b.title, b.writer_id AS writer, b.created_at, b.views,
-                            ROW_NUMBER() OVER (ORDER BY p.created_at DESC) AS rn
-                    FROM bulletin b
-                    JOIN members m ON b.writer_id = m.member_id
-                    )
-             WHERE rn BETWEEN 1 AND 10`);
-
-        res.render('index',{bulletin:info_bulletin.rows});
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
-    } finally {
-        if (conn) {
-            try {
-                await conn.close();
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    }
-});
+app.use('/bulletin', require('./routes/bulletin'));
 
 // 게시판 서버 시작
 app.listen(port, () => {
