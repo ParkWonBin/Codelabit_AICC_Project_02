@@ -1,65 +1,9 @@
+
 // 챗봇과 고객 이름 설정
 const CHATBOTNAME = '도우미'
 const USERNAME = '고객'
 
-<<<<<<<< HEAD:_chatbot/js/chatbot_New.js
-    // 유저가 입력할 입력창을 만들기
-    chatbotInitCreateInputArea()
-})
-/////////////////////////////////////////////////////////
-// 체팅방 화면 이동 및 기본 동작에 해당하는 함수.
-// 1. 스크롤 이동
-const goScrollEnd = ()=>{
-    const chatContainer = $('#chat-container');
-    chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
-}
-// 2. 메시지 추가
-const chatbotAppendMessage = (sender, message) => {
-    // 챗봇 컨테이너를 받아서 메시지를 작성하는 함수입니다.
-    const chatContainer = $('#chat-container');
-    chatContainer.append($(`<div><strong>${sender}:</strong> ${message}</div>`));
-    // 스크롤 맨 아래로 내리기
-    goScrollEnd()
-}
-// 3. 버튼으로 선택지 보여주기
-    function chatbotCreateBtnsByText(textArray) {
-        // 채팅방을 인식하여 버튼 들어갈 컨테이너를 만들어줍니다.
-        const chatContainer = $('#chat-container');
-        const buttonsContainer = $('<div class="buttons-container"></div>');
-        chatContainer.append(buttonsContainer); //이 메소드는 선택한 요소의 끝에 새로운 내용을 추가합니다
-
-    // 배열로 들어온 선택지들을 button으로 만들어 채팅방에 추가합니다.
-    textArray.forEach((text) => {
-        const button = $(`<button onclick="chatbotSendMessage('${text}')">${text}</button>`);
-        buttonsContainer.append(button);
-    });                                                //HTML 요소의 속성(attribute)에 JavaScript 함수를 이벤트 핸들러로 사용할 때는 이벤트 속성에 JavaScript 코드를 문자열로 작성하여 넣습니다. 이 때 작은따옴표(')로 감싸야 합니다.
-
-    // 버튼 만들어준 다음에 줄바꿈 2번은 있어야 행복함.
-    buttonsContainer.append($('<br><br>'))
-}
-
-const chatbotCreateHyperlink = (linkArray)=>{
-    // 채팅방을 인식하여 버튼 들어갈 컨테이너를 만들어줍니다.
-    const chatContainer = $('#chat-container');
-    const linksContainer = $('<div class="links-container"></div>');
-    chatContainer.append(linksContainer);
-
-    // 배열로 들어온 선택지들을 button으로 만들어 채팅방에 추가합니다.
-    linkArray.forEach((data) => {
-        const button = $(`<a href="${data.link}" target="_blank">${data.name}</a><br>`);
-        linksContainer.append(button);
-    });
-
-    linksContainer.append($('<br><br><br>'))
-
-}
-
-//////////////////////////////////////////////////////////
-// 비즈니스 로직 (핵심)
-// 챗봇의 대본은 여기 위치
-========
 // 챗봇의 대본
->>>>>>>> dev:resources/chatbot/js/chatbot.js
 // TODO : 나중에 백앤드에서 DB 조회 결과로 대본을 만들 예정. DB로 결과 받았다는 전제 하에 아래 형식으로 개발 완료.
 const chatbotDialogDictionary = {
     message : '환영합니다.<br>서대문구 경로당,요양시설 위치 알려드립니다.<br>아래 주제에 대해서 문의해주세요.<br><br>시설을 선택하세요.',
@@ -128,9 +72,6 @@ const chatbotDialogDictionary = {
     }
 }
 
-<<<<<<<< HEAD:_chatbot/js/chatbot_New.js
-let chatbotCurrentDialog = chatbotDialogDictionary //초기값. 챗봇이 처음 사용자와 대화를 시작하는 상황을 설정하는 것입니다.
-========
 let chatbotCurrentDialog = chatbotDialogDictionary //초기값.
 ////////////////////////////////////////////////////////
 // 화면이 그려질 때 설정.
@@ -191,10 +132,9 @@ const chatbotCreateHyperlink = (linkArray)=>{
 }
 
 //////////////////////////////////////////////////////////
->>>>>>>> dev:resources/chatbot/js/chatbot.js
 
 // 엔터치거나 전송 눌렀을 떄 실행되는 함수.
-// 고객님이 먼저 말하며 쳇봇이 대답함.
+// 고객님이 먼전 말하며 쳇봇이 대답함.
 const chatbotSendMessage = (userMassage)=>{
 
     // 우선 고객님의 한마디
@@ -203,13 +143,13 @@ const chatbotSendMessage = (userMassage)=>{
 
     // 나쁜 사용자가 줄바꿈 넣거나 스페이스바 넣으면 화나니까...
     // 앞뒤 공백문자를 제거한 뒤 대본이랑 비교한다.
-    userMassage = userMassage.replace(/\s/g, ''); //   \s는 공백을 의미하는 정규표현식이고, g는 전역 검색을 의미합니다. 따라서 위의 코드는 문자열 내의 모든 공백을 찾아 빈 문자열로 대체합니다.
+    userMassage = userMassage.replace(' ',"").trim()
 
 
     // 고객이 순순히 대본에 있는 말을 했는지부터 알아야함.
     if(Object.keys(chatbotCurrentDialog).includes(userMassage)){
         // 다행히 우리 시나리오에 있다.
-        chatbotCurrentDialog = chatbotCurrentDialog[userMassage] //사용자가 메시지를 보낼 때마다 다음 대화 상황으로 업데이트 되게 됩니다.
+        chatbotCurrentDialog = chatbotCurrentDialog[userMassage]
 
         // 바로가기 버튼을 만들어줄 게 있으면 하기
         if(chatbotCurrentDialog.spotLink){
@@ -292,12 +232,7 @@ const chatbotInitCreateInputArea = () => {
 
     // 엔터 키 입력 이벤트
     userInput.keypress(function(event) {
-<<<<<<<< HEAD:_chatbot/js/chatbot_New.js
-        // if (event.which === event.keys.enter) {
-        if (event.which === 13) { // 13은 엔터 키의 키코드입니다.
-========
         if (event.which === 13) {
->>>>>>>> dev:resources/chatbot/js/chatbot.js
             chatbotSendMessage(userInput.val());
             userInput.val("")
         }

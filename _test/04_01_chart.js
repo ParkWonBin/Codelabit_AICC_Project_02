@@ -15,10 +15,9 @@ oracledb.autoCommit = true;
 
 // db 정보 가져와서 쿼리 테스트 해보기
 const dbConfig = require('../_dbConfig');
-const sql_test1 = `SELECT COUNT(*) as count FROM member`
-const sql_test2 = `SELECT * FROM member WHERE ROWNUM <= 5`
+const sql_test2 ='SELECT POST_ID, NVL(VIEWS, 0) AS VIEWS FROM (SELECT POST_ID, VIEWS FROM BULLETIN ORDER BY VIEWS DESC) WHERE ROWNUM <= 5'
 
-// 테스트 수행
+
 selectDatabase();
 
 // 무명함수를 이용하여 비동기함수 실행 예시
@@ -46,8 +45,8 @@ async function selectDatabase() {
     const connection = await oracledb.getConnection(dbConfig);
 
     //쿼리 실행
-    const reesult = await connection.execute(sql_test1);
-    console.log(reesult.rows[0]);
+    const result = await connection.execute(sql_test2);
+    console.log(result.rows[0]);
 
     // 연결해제
     await connection.close();
