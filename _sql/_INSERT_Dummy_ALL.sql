@@ -35,4 +35,24 @@ COMMIT;
 END;
 /
 -----------------------------------
+
+
+-- post_id가 1부터 5까지인 레코드 삽입
+INSERT INTO bulletin (post_id) VALUES (1);
+INSERT INTO bulletin (post_id) VALUES (2);
+INSERT INTO bulletin (post_id) VALUES (3);
+INSERT INTO bulletin (post_id) VALUES (4);
+INSERT INTO bulletin (post_id) VALUES (5);
+
+-- 각 레코드의 views 열 값 설정
+UPDATE bulletin SET views = 1 WHERE post_id = 1;
+UPDATE bulletin SET views = 2 WHERE post_id = 2;
+UPDATE bulletin SET views = 3 WHERE post_id = 3;
+UPDATE bulletin SET views = 4 WHERE post_id = 4;
+UPDATE bulletin SET views = 5 WHERE post_id = 5;
+
+
+
+
+
 COMMIT;
