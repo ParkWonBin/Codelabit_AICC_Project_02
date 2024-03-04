@@ -37,6 +37,7 @@ router.post('/create', async (req, res) => {
     }, 2));
 
     // 1. req.query, req.params, req.body, req.session 등 데이터를 가져옵니다.
+    // TODO : 장소 등록할 때 모달창 뜨게 해서, spotName을 입력받게 하고, 해당 입력값을 여기 'test'위치에 가져오도록 해야합니다.
     const sportName = 'test'
     const base64Data = req.body.base64Data
     const top = req.body.top.replace('vh', '')

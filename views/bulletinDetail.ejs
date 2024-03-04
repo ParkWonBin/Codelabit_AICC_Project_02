@@ -47,7 +47,7 @@
 
      <!-- 댓글 입력 폼 -->
     <form id="commentForm" action="/bulletin/addComment" method="post" class="post-comments">
-        <input style="display:none" name="postId" value="<%= postId %>">
+        <input type="hidden" name="postId" value="<%= postId %>">
         <textarea name="comment" rows="4" cols="50" placeholder="댓글을 입력하세요"></textarea><br>
         <button type="submit">댓글 등록</button>
     </form>

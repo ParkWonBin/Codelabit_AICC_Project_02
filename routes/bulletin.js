@@ -30,27 +30,27 @@ router.get('/', async (req, res) => {
     // 사용자 설정 영역
     const currentPage = req.query.page || 1 // 쿼리에 없으면 기본값 1
     // TODO : 페이지당 표시할 게시글 및 페이지 개수 입력받는 란 만들기
-   
+
     const postsPerPage = req.query.postPerPage || 8;
     const maxPageNumber =req.query.pageMaxCount || 5;
 
-    // 전체 게시글 확인
+    // 전체 게시글 개수 확인
     const bulletinGetTotalPostCount = await db_bulletinGetTotalPostCount();
+    console.table(bulletinGetTotalPostCount);
+
+    // 화면 아래 표시할 <이전페이지 > 숫자(data)... <다음페이지> 들어갈 data 계산
     const totalPosts = bulletinGetTotalPostCount.totalCount;
     const totalPage = Math.ceil(totalPosts / postsPerPage);
     const stertPagetmp = totalPage - maxPageNumber + 1
     const startPage =
-        (totalPage - currentPage) < maxPageNumber ?
-            // 전체(totalPage)가 3페이지고, 내가(currentPage) 1페이지인데, 한번에 5개 페이지(maxPageNumber)를 쓰는 경우 여기로 옴
-            (stertPagetmp<1)?
-                // 시작 페이지 숫자(stertPagetmp)가 0보다 작게 찍히면 1페에지부터 보여주라고 할거임.
-                '1' :
-                // 시작  페이지 숫자(stertPagetmp)가 1보다 큰 경우에는, 해당 숫자를 그대로 쓸거임.
-                stertPagetmp :
-            // 전체가 100페이지고, 내가 50번쨰 페이지고, 한번에 5페이지씩 보여준다고 할떄는, 표시 시작 페이지를 현재 페이지 부터로 설정함.
-            currentPage;
+        (totalPage >= currentPage + maxPageNumber) ? currentPage:
+            // 전체가 100페이지고, 내가 50번쨰 페이지고, 한번에 5페이지씩 보여주는 상황이라면, startPage를 현재페이지로 설정
+            (stertPagetmp > 0)? stertPagetmp :
+                // 위에서 계산한 시작 페이지(stertPagetmp)가 0보다 큰 경우, 해당 계산 결과 보여주기
+                '1';
+                // 위에서 계산한 시작 페이지(stertPagetmp)가 0이하로 찍힌다면, 시작페이지를 1로 설정
+
     const endPage = Math.min(startPage + maxPageNumber - 1, totalPage);
-    console.table(bulletinGetTotalPostCount);
 
     // 표시할 데이터 확인
     const startRow = (currentPage - 1) * postsPerPage + 1;
@@ -88,7 +88,6 @@ router.get('/Detail/:postId', async (req, res) => {
         return res.redirect(`/main/login`)
     }
 
-
     // 게시글 번호가 입력되지 않은 경우  게시판으로 이동
     if(!postId){
         return res.redirect(`/bulletin?alertMsg=게시물을 찾을 수 없습니다.`)
@@ -106,7 +105,10 @@ router.get('/Detail/:postId', async (req, res) => {
     }
     console.log(bulletinGetPostByPostId);
 
-    //해당 계시글의 댓글 조회
+    // 해당 계시글의 댓글 조회
+    // 추후에 댓글 트리관계 테스팅을 위해 db함수 안에 트리 전처리 로직을 넣었습니다.
+    // 아루엍에서 트리 전처리를 수행할 경우, 기능 테스트가 어려울 수 있기 때문에, 테스트 가능한 영역에 구현을 했고,
+    // 라우터는 최대한 간결한 형태를 유지하여 전체적인 연결정보와 맥락을 알 수 있게 관리하는 게 목표입니다.
     const bulletinGetCommentsByPostId = await db_bulletinGetCommentsByPostId(postId);
     console.log((bulletinGetCommentsByPostId.commentTree))
 
@@ -202,7 +204,6 @@ router.post('/edit/:postId', async (req, res) => {
     return res.redirect(`/bulletin/Detail/${postId}?alertMsg=${alertMsg}`)
 });
 
-
 // http://localhost:3000/bulletin/delete
 router.post('/delete/:postId', async (req, res) => {
     const postId = req.params.postId
@@ -216,6 +217,7 @@ router.post('/delete/:postId', async (req, res) => {
     }
 
     // 해당 게시글의 댓글을 모두 삭제합니다.
+    // TODO : 해당 게시글 댓글 참조를 모두 비우는 작업 해야함.
 
     // 게시글 삭제를 시도합니다.
     const deletePost = await db_bulletinDeletePost(postId);
@@ -243,6 +245,7 @@ router.post('/addComment', async (req, res) => {
 router.post('/deleteComment/:postId/:commentId', async (req, res) => {
     const postId = req.params.postId;
     const commentId = req.params.commentId;
+    // 미개발, 폼태그로 어떻게 할지 ...
 
     return res.redirect(`/bulletin/Detail/${postId}?alertMsg=댓글이 삭제되었습니다.`)
 });
