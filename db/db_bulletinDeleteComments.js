@@ -4,15 +4,17 @@ const dbConfig = require('../_dbConfig');
 /**
  * 함수의 주석을 추가합니다.
  * @author wbpark
- * @param {string} a
+ * @param {number} postId
+ * @param {number} commentId
+ * @param {number} commentWriterId
  * @returns {{
  * succeed:boolean,
  * error:string|error
  * }}
- * .succeed - 로그인 성공 여부 <br>
+ * .succeed - 댓글 삭제 성공 여부 <br>
  * .error - 에러여부 혹은 에러내역
  */
-const db_bulletinUpdateCommentContentNull = async (a) => {
+const db_bulletinDeleteCommentsByPostId = async (postId, commentId, commentWriterId) => {
     let connection;
     // DB 네트워크 상태가 안좋으면 connection 만들 때부터 에러 발생하므로 Try 내부에 넣음.
     try {
@@ -21,14 +23,19 @@ const db_bulletinUpdateCommentContentNull = async (a) => {
         connection = await oracledb.getConnection(dbConfig);
 
         // 2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
-        const sqlString = '';
-        const bindData = {}
+        const sqlString = `
+            DELETE
+            FROM comments
+            WHERE post_id = :postId
+              AND comment_id = :commentId
+              AND writer_id = :commentWriterId `
+        const bindData = {postId, commentId, commentWriterId}
         const result = await connection.execute(sqlString, bindData);
 
         // 3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
         // 가령 성공 여부 등
         return {
-            succeed: true,
+            succeed: result.rowsAffected>0,
             error: null
         };
     } catch (error) {
@@ -47,4 +54,4 @@ const db_bulletinUpdateCommentContentNull = async (a) => {
 }
 
 
-module.exports = db_bulletinUpdateCommentContentNull;
+module.exports = db_bulletinDeleteCommentsByPostId;
