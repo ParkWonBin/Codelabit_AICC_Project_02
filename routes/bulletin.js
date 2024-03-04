@@ -242,12 +242,34 @@ router.post('/addComment', async (req, res) => {
 });
 
 // http://localhost:3000/bulletin/deleteComment
-router.post('/deleteComment/:postId/:commentId', async (req, res) => {
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    // 미개발, 폼태그로 어떻게 할지 ...
+router.post('/deleteComment', async (req, res) => {
+    const {postId, commentId, commentWriterId, childrenCount} = req.body
+    console.log({postId, commentId, commentWriterId, childrenCount})
 
-    return res.redirect(`/bulletin/Detail/${postId}?alertMsg=댓글이 삭제되었습니다.`)
+    // 대댓글이 있다면 삭제 안하고 사용자명이랑 내용만 지우도록
+    let result = {succeed:false}
+    if(childrenCount === 0){
+        console.log('대댓글이 없으므로 해당 댓글을 삭제합니다.')
+        result = db_bulletinDeleteCommentsByPostId(postId,commentId,commentWriterId)
+
+    }else {
+        console.log('대댓글이 있으므로 댓글의 내용만 제거합니다.')
+        result = db_bulletinUpdateCommentContentNull(postId,commentId,commentWriterId)
+    }
+
+    const alertMsg = result.succeed? "댓글이 삭제되었습니다." : "댓글 삭제에 실패했습니다."
+    return res.redirect(`/bulletin/Detail/${postId}?alertMsg=${alertMsg}`)
 });
+
+// TODO : 댓글 수정 기능 개발중
+// http://localhost:3000/bulletin/deleteComment
+router.post('/UdateComment', async (req, res) => {
+    const {postId, commentId, commentWriterId} = req.body
+    console.log({postId, commentId, commentWriterId})
+
+    // 대댓글이 없다면 바로 해당 댓글 삭제
+    return res.redirect(`/bulletin/Detail/${postId}?alertMsg=댓글 수정 기능은 아직 개발중입니다.`)
+});
+
 
 module.exports = router;

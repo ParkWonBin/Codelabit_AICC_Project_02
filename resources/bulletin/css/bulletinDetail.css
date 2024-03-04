@@ -20,8 +20,42 @@
 
 .post-author {
     margin-bottom: 5px;
+    padding-top: 5px;
     color: #666;
 }
+.commentBtnForm{
+    margin: 0;
+    padding: 0;
+}
+
+.commentDeleteBtn{
+    margin: 0;
+    padding: 3px 5px;
+    color: white;
+    font-weight: bold;
+    background-color: crimson;
+    border: 2px solid #940a0a;
+    border-radius: 5px;
+}
+
+.commentDeleteBtn:hover{
+    background-color: red;
+}
+
+.commentUpdateBtn{
+    margin: 0;
+    padding: 3px 5px;
+    color: white;
+    font-weight: bold;
+    background-color: #3dc939;
+    border: 2px solid #0a9415;
+    border-radius: 5px;
+}
+
+.commentUpdateBtn:hover{
+    background-color: #1aff00;
+}
+
 
 .post-date {
     color: #666;
