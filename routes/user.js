@@ -1,14 +1,21 @@
 const express = require('express');
 // const path = require('path')
 
-// 지원하는 엔드포인트
+// NOTE : user 라우터는 회원정보와 관련된 기능을 수행한 뒤 main에 있는 화면으로 연결을 시켜줍니다.
+// 의도 : view와 controller를 분리해보고 싶었다. 화면표시는 main.js, 데이터처리는 user에서 진행한다.
+// 컨셉 : 네이밍 규칭은 최대한 CRUD 컨셉을 유지한다. 다만, 로그인 로그아웃 등 CRUD 컨셉에 포함되지 않은 기능은
+//        해당 기능의 가장 범용적인 기술명을 사용하도록 한다.
+//        - 등록의 경우 CRUD 컨셉에 들어가므로 Register 대신 crate를 사용
+//        - 현재 존재하는 사용자인지 조회하는 기능은 login이 가장 범용적인 기술명이고 CRUD 컨셉에 하위가 아니므로 Read 대신 login 을 사용함.
+//
+// 라우터에서는 db관련 코드를 거의 배제하고자 했으므로, db폴더 안에 구현한 함수들을 끌어와서 작업함.
+
 // get : http://localhost:3000/user/
 // get : http://localhost:3000/user/logout
 // post : http://localhost:3000/user/login
 // post : http://localhost:3000/user/create
 // post : http://localhost:3000/user/update
 // post : http://localhost:3000/user/delete
-
 
 const logData = true
 const router = express.Router();
@@ -62,7 +69,7 @@ router.post('/login', async (req, res) => {
         req.session.memberRole = userLogin.memberRole
         return res.redirect('/main')
     }else{
-        return res.redirect('/main/login?alertMsg=아이디 혹은 비밀번호가 없습니다.')
+        return res.redirect('/main/login?alertMsg=아이디 혹은 비밀번호가 틀렸습니다.')
     }
 });
 
@@ -76,9 +83,9 @@ router.post('/create', async (req, res) => {
     const { userName, userId, userPw, userPwConform } = req.body
     // if(logData){console.log(JSON.stringify({userName, userId, userPw, userPwConform },null, 2))}
 
-    // 1.1. [새 비밀번호]와 [새 비밀번호 확인]이 일치하지 않는 경우
+    // 1.1.  [비밀번호]와 [비밀번호 확인]이 일치하지 않는 경우
     if(userPw !== userPwConform){
-        return res.redirect('/main/CreateUser?alertMsg=[새 비밀번호 확인]이 일치하지 않습니다.')
+        return res.redirect('/main/CreateUser?alertMsg=[비밀번호 확인]이 일치하지 않습니다.')
     }
 
     // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리
@@ -87,7 +94,7 @@ router.post('/create', async (req, res) => {
     if(checkId.memberExist){
         return res.redirect(`/main/CreateUser?alertMsg=이미 존재하는 아이디(${userId})입니다.`)
     }else if(checkId.error){
-        return res.redirect('/main/CreateUser?알 수 없는 오류로 [아이디 중복검사]에 실패했습니다.')
+        return res.redirect('/main/CreateUser?alertMsg=알 수 없는 오류로 [아이디 중복검사]에 실패했습니다.')
     }
 
     // 2.2. 이미 존재하는 Name 인지 확인하기
@@ -95,7 +102,7 @@ router.post('/create', async (req, res) => {
     if(checkName.memberExist){
         return res.redirect(`/main/CreateUser?alertMsg=이미 존재하는 이름(${userName})입니다.`)
     }else if(checkName.error){
-        return res.redirect('/main/CreateUser?알 수 없는 오류로 [이름 중복검사]에 실패했습니다.')
+        return res.redirect('/main/CreateUser?alertMsg=알 수 없는 오류로 [이름 중복검사]에 실패했습니다.')
     }
 
     // 2.3. 계정 생성 시도

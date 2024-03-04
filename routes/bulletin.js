@@ -14,7 +14,6 @@ const db_bulletinCreateComments = require('../db/db_bulletinCreateComments')
 // get : http://localhost:3000/bulletin
 // get : http://localhost:3000/bulletin/Detail/:postId
 // get : http://localhost:3000/bulletin/write
-// get : http://localhost:3000/bulletin/addComment
 // post : http://localhost:3000/bulletin/write
 // post : http://localhost:3000/bulletin/edit
 // post : http://localhost:3000/bulletin/delete
@@ -31,6 +30,7 @@ router.get('/', async (req, res) => {
     // 사용자 설정 영역
     const currentPage = req.query.page || 1 // 쿼리에 없으면 기본값 1
     // TODO : 페이지당 표시할 게시글 및 페이지 개수 입력받는 란 만들기
+   
     const postsPerPage = req.query.postPerPage || 8;
     const maxPageNumber =req.query.pageMaxCount || 5;
 
@@ -38,7 +38,17 @@ router.get('/', async (req, res) => {
     const bulletinGetTotalPostCount = await db_bulletinGetTotalPostCount();
     const totalPosts = bulletinGetTotalPostCount.totalCount;
     const totalPage = Math.ceil(totalPosts / postsPerPage);
-    const startPage = (totalPage - currentPage) < maxPageNumber ? totalPage - maxPageNumber + 1 : currentPage;
+    const stertPagetmp = totalPage - maxPageNumber + 1
+    const startPage =
+        (totalPage - currentPage) < maxPageNumber ?
+            // 전체(totalPage)가 3페이지고, 내가(currentPage) 1페이지인데, 한번에 5개 페이지(maxPageNumber)를 쓰는 경우 여기로 옴
+            (stertPagetmp<1)?
+                // 시작 페이지 숫자(stertPagetmp)가 0보다 작게 찍히면 1페에지부터 보여주라고 할거임.
+                '1' :
+                // 시작  페이지 숫자(stertPagetmp)가 1보다 큰 경우에는, 해당 숫자를 그대로 쓸거임.
+                stertPagetmp :
+            // 전체가 100페이지고, 내가 50번쨰 페이지고, 한번에 5페이지씩 보여준다고 할떄는, 표시 시작 페이지를 현재 페이지 부터로 설정함.
+            currentPage;
     const endPage = Math.min(startPage + maxPageNumber - 1, totalPage);
     console.table(bulletinGetTotalPostCount);
 
