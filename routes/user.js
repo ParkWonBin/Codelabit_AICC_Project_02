@@ -58,7 +58,8 @@ router.post('/login', async (req, res) => {
     const{ userId,userPw } = req.body
 
     // 2. DB 연결과 관련된 부분은 다른 함수랑 연결해서 처리
-    const userLogin = await db_userLogin(userId,userPw)
+    const userLogin
+        = await db_userLogin(userId,userPw)
     if(logData){console.table(userLogin)}
 
     // 3. DB 요청 결과를 통해 어떤 화면과 연결시킬지 판단 및 결정.

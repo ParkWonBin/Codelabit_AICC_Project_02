@@ -19,8 +19,8 @@
                     </div>
                 <% }); %>
                 <div>
-                    <% buttons.forEach(button => { %>
-                        <<%= button.tagName %> <%= button.attr %> class="mainButton"><%= button.text %></<%= button.tagName %>>
+                    <% buttons.forEach(tagData => { %>
+                        <<%= tagData.tagName %> <%= tagData.attr %> class="mainButton"><%= tagData.text %></<%= tagData.tagName %>>
                     <% }); %>
                 </div>
             </form>

@@ -112,7 +112,7 @@ router.get('/login',(req,res)=>{
     })
 })
 
-// http://localhost:3000/main/CreateUser
+// http://localhost:3000/main/CreateUser/
 router.get('/CreateUser',(req,res)=>{
     const alertMsg = (req.query.alertMsg)? req.query.alertMsg : null
 
