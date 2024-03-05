@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('../_dbConfig');
+const dbConfig = require('../dbConfig');
 
 // DB 연결과 관련된 부분은 함수로 분리해서 따로 관리합니다.
 /**

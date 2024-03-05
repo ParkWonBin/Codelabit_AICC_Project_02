@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('../_dbConfig');
+const dbConfig = require('../dbConfig');
 
 /**
  * 함수의 주석을 추가합니다.

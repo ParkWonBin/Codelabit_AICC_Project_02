@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('../_dbConfig');
+const dbConfig = require('../dbConfig');
 
 /**
  * 사용자 아이디에 대하여 중복 검사를 수행합니다.

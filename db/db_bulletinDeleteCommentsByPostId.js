@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('../_dbConfig');
+const dbConfig = require('../dbConfig');
 
 /**
  * 해당 게시글의 댓글을 삭제합니다. 자기참조를 없애기 위해 parent_comment_id 열을 null로 초기화한 뒤 삭제를 진행합니다.
