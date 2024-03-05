@@ -1,16 +1,19 @@
 ## 코드랩 아카데미 AICC 2차 프로젝트
+
+## 배포  : https://aicc2.wbpark.app
+
 ### 인원 및 기여 : 
 - 박원빈 (조장) :
   -  설계 : 폴더 구조, 변수명 규칙, 함수 인터페이스 정의 구현
   -  탬플릿 : 개발 템플릿 [라우터, db, 테스트] 생성 및 공유
   -  문서 : 코드 내 주석 (의도,목적,기능,역할,주의사항 등) 기록 및 JDOC, README 작성
   -  배포 : AWS EC2, Route53, HSTS, 서브도메인  https://aicc2.wbpark.app
-  -  테스트 : useCase 정의 및 테스트 코드 생성
+  -  테스트 : 테스트 시나리오 정의 및 테스트 작성
   -  피드백 : 각 조원이 개발한 코드에 대해 테스트 및 코드리뷰 후 프로젝트에 적용
   -  백업1 : (/map) : 클라이언트(비동기요청/모바일지원/드래그/드롭), 서버(파일 저장/삭제)
   -  백업2 : (/main, /user) : view를 ejs 하나로 통합, 회원 탈퇴 시 참조 레코드 제거
   -  백업3 : (/bulletin) : 트리 구조로 댓글 [등록, 조회, 삭제]
-  -  백업4 : (/chatbot) : 응답하는 로직과 대본에 해당하는 데이터를 분리시킴
+  -  백업4 : (/chatbot) : 응답하는 로직과 대본에 해당하는 데이터를 분리
 - 이정훈 :
   - 기여 : 프로젝트 내 **(/main, /user)** 영역 개발 (프론트, 백앤드, 쿼리)
   - 개발 : 회원관리 [가입, 로그인, 비밀번호 변경, 탈퇴] 페이지 및 기능 개발
@@ -219,69 +222,339 @@ erDiagram
 
 ![](./_PT/veiwMap.png)
 
+- get : `/map`
+- post : `/map/create`
+- post : `/map/update`
+- post : `/map/delete`
 
 #### 5.3 `bulletin`
 ##### 5.3.1. 게시물 목록 조회
 
 ![](./_PT/veiwbulletinBoard.png)   
+- get : `/bulletin`
 
 ##### 5.3.2. 게시물 조회,게시물 작성, 게시물 수정, 게시물 삭제, 댓글 등록, 댓글 삭제
 
 ![](./_PT/veiwbulletinDetial.png)
-
+- get : `/bulletin/Detail/:postId`
+- get : `/bulletin/write`
+- post : `/bulletin/write`
+- post : `/bulletin/edit`
+- post : `/bulletin/delete`
+- post : `/bulletin/addComment`
+- post : `/bulletin/deleteComment`
 
 ### 6. 테스트 코드
-#### 삭제로직 관련
+
+#### 6.1. user - 회원 가입부터 탈퇴까지
 ![](./_PT/delete_logic.png)
+##### 6.1.1. Test Code
+```js
+// 환경변수 불러오고 출력해보기
+require('dotenv').config({ path: '../.env' })
+console.log("IP : " + process.env.DB_CONNECT_STRING)
+console.log("ID : " + process.env.DB_USER)
+
+// oracledb 환경설정하기
+const oracledb = require('oracledb');
+oracledb.initOracleClient({ libDir: process.env.ORACLEDB_INITORACLECLIENT });
+oracledb.autoCommit = true;
+
+//////////////////////////////////
+const moment = require('moment');
+const db_userCheckMemberExistById = require("../db/db_userCheckMemberExistById");
+const db_userCheckMemberExistByName = require("../db/db_userCheckMemberExistByName");
+const db_userCreateMember = require("../db/db_userCreateMember");
+const db_userUpdateMemberPasword = require("../db/db_userUpdateMemberPasword");
+const db_setDataNull = require("../db/db_util_setDataNull");
+const db_userDeleteMember = require("../db/db_userDeleteMember");
+
+// 무명함수를 이용하여 비동기함수 실행 예시
+(async ()=>{
+
+    const formattedDateTime = moment().format('YYYYMMDD_HHmmss_ms');
+
+    // 아이디 안겹치게 하려고 현재시기 밀리초 단위로 가져와서 id/name 에 넣음.
+    const userName = 'test_'+formattedDateTime
+    const userId = 'test_'+formattedDateTime
+    const userPw = formattedDateTime
+    console.log({id: userId, name: userName, pw: userPw})
+
+    const checkId = await db_userCheckMemberExistById(userId)
+    console.log("id 중복여부 : "+checkId.memberExist)
+
+    const checkName = await db_userCheckMemberExistByName(userName)
+    console.log("name 중복여부 : "+checkName.memberExist)
+
+    const userCreateMember = await db_userCreateMember(userId,userPw,userName)
+    console.table(userCreateMember)
+    console.log(`회원가입 : ${(userCreateMember.succeed)?"성공":"실패"}`)
+
+    // 비밀번호 변경 시도
+    const userPwNew = 'test123'
+    console.log(`비밀번호 변경 시도 : ${userPwNew}`)
+    const userUpdateMemberPasword = await db_userUpdateMemberPasword(userId,userPw, userPwNew)
+    console.table(userUpdateMemberPasword)
+    console.log(`비밀번호 변경 : ${userUpdateMemberPasword.succeed?"성공":"실패"}`)
+
+    //회원탈퇴 전에 댓글,게시글,장소등록 등에 등록했던 데이터를 모두 참조 해제합니다.
+    const relatedData = [
+        {tableName:'comments', columnName:'writer_id'},
+        {tableName:'bulletin', columnName:'writer_id'},
+        {tableName:'hotspot', columnName:'auther_id'}
+    ]
+
+    // 비동기 함수들이 모두 수행될 때까지 기다렸다가 합치는 함수.
+    // 여러개의 비동기 함수를 동시실행 후 리턴값을 수집하려면 promise all
+    console.log('user 테이블을 참조하는 테이블들에서, 해당 레코드의 참조 제거 시도')
+    const deleteDatalog = await Promise.all(
+        relatedData.map(data =>
+            db_setDataNull(data.tableName, data.columnName, userId)
+                .then(result => {
+                    return {...data, id: userId, ...result}
+                })
+        )
+    );
+    console.table(deleteDatalog);
+    
+    // 2.3. 맴버 삭제 시도
+    console.log('맴버 삭제 시도')
+    const userDeleteMember = await db_userDeleteMember(userId,userPwNew)
+    console.table(userDeleteMember);
+    console.log(`회원 삭제 : ${userDeleteMember.succeed?"성공":"실패"}`)
+
+})()
+```
+##### 6.1.2. Test Result
+```js
+IP : localhost:1521
+ID : AICC2
+{                                   
+  id: 'test_20240305_151034_1034',  
+  name: 'test_20240305_151034_1034',
+  pw: '20240305_151034_1034'        
+}                                   
+id 중복여부 : false
+name 중복여부 : false
+┌────────────┬─────────────────────────────┐
+│ (index)    │ Values                      │
+├────────────┼─────────────────────────────┤
+│ succeed    │ true                        │
+│ memberNum  │ 12                          │
+│ memberId   │ 'test_20240305_151034_1034' │
+│ memberName │ 'test_20240305_151034_1034' │
+│ memberRole │ null                        │
+│ error      │ null                        │
+└────────────┴─────────────────────────────┘
+회원가입 : 성공             
+비밀번호 변경 시도 : test123
+┌─────────┬────────┐
+│ (index) │ Values │
+├─────────┼────────┤
+│ succeed │ true   │
+│ error   │ null   │
+└─────────┴────────┘
+비밀번호 변경 : 성공
+user 테이블을 참조하는 테이블들에서, 해당 레코드의 참조 제거 시도
+┌─────────┬────────────┬─────────────┬─────────────────────────────┬─────────┬──────────────┬───────┐
+│ (index) │ tableName  │ columnName  │ id                          │ succeed │ rowsAffected │ error │
+├─────────┼────────────┼─────────────┼─────────────────────────────┼─────────┼──────────────┼───────┤
+│ 0       │ 'comments' │ 'writer_id' │ 'test_20240305_151034_1034' │ true    │ 0            │ null  │
+│ 1       │ 'bulletin' │ 'writer_id' │ 'test_20240305_151034_1034' │ true    │ 0            │ null  │
+│ 2       │ 'hotspot'  │ 'Auther_id' │ 'test_20240305_151034_1034' │ true    │ 0            │ null  │
+└─────────┴────────────┴─────────────┴─────────────────────────────┴─────────┴──────────────┴───────┘
+맴버 삭제 시도
+┌─────────┬────────┐
+│ (index) │ Values │
+├─────────┼────────┤
+│ succeed │ true   │
+│ error   │ null   │
+└─────────┴────────┘
+회원 삭제 : 성공
+
+Process finished with exit code 0
+```
+
+#### 2. map - 이미지 등록부터 삭제까지
+##### 6.1.1. Test Code
+```js
+require('dotenv').config({path: '../.env'})
+console.log("IP : " + process.env.DB_CONNECT_STRING)
+console.log("ID : " + process.env.DB_USER)
+
+// oracledb 환경설정하기
+const oracledb = require('oracledb');
+oracledb.initOracleClient({libDir: process.env.ORACLEDB_INITORACLECLIENT});
+oracledb.autoCommit = true;
+///////////////////////////////////
+
+const path = require("path");
+const imgUploadDir = path.join(__dirname, '../resources/map/images/upload');
+
+const db_mapCreateHotspot = require("../db/db_mapCreateHotspot");
+const db_mapUpdateHotspotPos =  require("../db/db_mapUpdateHotspotPos")
+const db_mapDeleteHotspot  = require('../db/db_mapDeleteHotspot')
+const saveBase64AndReturnFileNameByCurrentTime = require("../util/util_saveBase64AndReturnFileNameByCurrentTime");
+
+// 무명함수를 이용하여 비동기함수 실행 예시
+(async () => {
+    const sportName = 'test'
+    const base64Data = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAVCAIAAABkNkFWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAE9SURBVEhL7ZbbEYQgDEWti4Koh2pohmLc4Ea4hCTq6Dj7secTYnJ4hHFZf5VuVlIMTMw89gZWXTQLC/OymV73b2bjmuXIUwMhlS0EKLleCp6niBBTnoIYEasFu3UvmOUIdZA428FGCDDrI2Z2qYpYhJ5vpwcfm2249wxz7FtUcBPxkx4c2vnR2erB/j3b8MxA7DirlYgWwkTjNK6b2VN9pp8RRNPwdu9BZOKWmX9vmP7RoNYxOvlNM8LsYxIUrfyQmWhClyJftMaQ5ZaZM3WSkqsl5xjVbpnhcY5zVHFnr2XGGlt/zSyVCk9U8Ka1R4oeNB7CWpCn1mpZcBwVrLqq2RfrNmgMq8VlqAzRVt1uNoUMZoTZbzKQUnm9KaONumBWoXZKkVEeH2q3+pBzCkri/Wuc+NloKHWF2c+wrh+XAAnZ7FGq7AAAAABJRU5ErkJggg=='
+    const top = 30
+    const left = 20
+
+    // 2. 이미지 저장 시도
+    const saveFile = saveBase64AndReturnFileNameByCurrentTime(base64Data, imgUploadDir);
+    console.log(`이미지 저장 : ${saveFile.succeed? "성공" : "실패"}`)
+    console.log(`이미지 저장 : ${JSON.stringify(saveFile,null,2)}`)
+
+    // 3. db 등록
+    const CreateHotspot = await db_mapCreateHotspot(saveFile.fileName, sportName, top, left);
+    console.log(`이미지 등록 : ${CreateHotspot.succeed? "성공" : "실패"}`)
+    console.log(`이미지 등록 : ${JSON.stringify(CreateHotspot,null,2)}`)
+
+    // 4. 이미지 이동 시도
+    const NewTop = top + 10
+    const NewLeft = left + 10
+    console.log(`이미지 이동 : spotId${CreateHotspot.spotId} NewTop:${NewTop}, NewLeft:${NewLeft}`)
+    const mapdateHotspotPos = await db_mapUpdateHotspotPos(CreateHotspot.spotId,NewLeft,top);
+    console.log(`이미지 이동 : ${mapdateHotspotPos.succeed? "성공" : "실패"}`)
+    console.log(`이미지 이동 : ${JSON.stringify(CreateHotspot,null,2)}`)
+
+    // 5. 이미지 삭제 시도
+    console.log(`이미지 삭제 : spotId : ${CreateHotspot.spotId}`)
+    const mapDeleteHotspot = await db_mapDeleteHotspot(CreateHotspot.spotId)
+    console.log(`이미지 삭제 : ${mapDeleteHotspot.succeed? "성공" : "실패"}`)
+    console.log(`이미지 이동 : ${JSON.stringify(mapDeleteHotspot,null,2)}`)
+})()
+```
+##### 6.1.2. Test Code
+```js
+IP : localhost:1521
+ID : AICC2
+1709619315213.png 파일 저장 성공!
+이미지 저장 : 성공                
+이미지 저장 : {                   
+  "succeed": true,                
+  "fileName": "1709619315213.png",
+  "error": null                   
+}                                 
+이미지 등록 : 성공
+이미지 등록 : {                             
+  "succeed": true,                          
+  "spotId": 21,                             
+  "error": null                             
+}                                           
+이미지 이동 : spotId21 NewTop:40, NewLeft:30
+이미지 이동 : 성공       
+이미지 이동 : {          
+  "succeed": true,       
+  "spotId": 21,          
+  "error": null          
+}                        
+이미지 삭제 : spotId : 21
+이미지 삭제 : 성공
+이미지 이동 : {
+  "succeed": true,
+  "error": null
+}
+
+Process finished with exit code 0
+```
+
+#### 2. bulletin - 게시글 생성, 수정, 삭제
+##### 6.1.1. Test Code
+```js
+// 환경변수 불러오고 출력해보기
+require('dotenv').config({ path: '../.env' })
+console.log("IP : " + process.env.DB_CONNECT_STRING)
+console.log("ID : " + process.env.DB_USER)
+
+// oracledb 환경설정하기
+const oracledb = require('oracledb');
+oracledb.initOracleClient({ libDir: process.env.ORACLEDB_INITORACLECLIENT });
+oracledb.autoCommit = true;
+///////////////////////////////////
+const db_bulletinCreatePost = require('../db/db_bulletinCreatePost');
+const db_bulletinUpdatePost = require('../db/db_bulletinUpdatePost');
+const db_bulletinDeletePost = require('../db/db_bulletinDeletePost');
+// 무명함수를 이용하여 비동기함수 실행 예시
+(async ()=>{
+    // 글작성에 필요한 데이터
+    const writerId = 'test'
+    const postTitle = '테스트입니다.'
+    const postContent = '아무말 테스트'
+
+    // 글 작성 시도
+    console.log('게시글 작성 시도')
+    const createPost = await db_bulletinCreatePost(writerId, postTitle, postContent)
+    console.log(createPost)
+
+    // 글 수정 시도
+    const postTitleNew = postTitle + " (수정함)"
+    const postContentNew = postContent + " (수정함)"
+
+    console.log("게시글 수정 시도")
+    const updatePost = await db_bulletinUpdatePost(createPost.postId, postTitleNew, postContentNew);
+    console.log(updatePost)
+
+    console.log("게시글 삭제 시도")
+    const deletePost = await db_bulletinDeletePost(createPost.postId)
+    console.log(deletePost)
+})()
+```
+##### 6.1.2. Test Code
+```js
+IP : localhost:1521
+ID : AICC2
+1709619315213.png 파일 저장 성공!
+이미지 저장 : 성공                
+이미지 저장 : {                   
+  "succeed": true,                
+  "fileName": "1709619315213.png",
+  "error": null                   
+}                                 
+이미지 등록 : 성공
+이미지 등록 : {                             
+  "succeed": true,                          
+  "spotId": 21,                             
+  "error": null                             
+}                                           
+이미지 이동 : spotId21 NewTop:40, NewLeft:30
+이미지 이동 : 성공       
+이미지 이동 : {          
+  "succeed": true,       
+  "spotId": 21,          
+  "error": null          
+}                        
+이미지 삭제 : spotId : 21
+이미지 삭제 : 성공
+이미지 이동 : {
+  "succeed": true,
+  "error": null
+}
+
+Process finished with exit code 0
+
+```
 
 ### 7. 개선사항
+#### 1.main
+- [ ] id 유효성 검사 fromt에서도 검증하기
+- [ ] name 유효성 검사 fromt에서도 검증하기
+- [ ] name 수정하는 기능도 추가해보기
+#### 2.map
+- [ ] 등록버튼 눌렀을 떄 추가정보 입력하는 모달창 나오게 하기
+- [ ] 이미지 크기를 확인하고, 등록할 수 없는 크기면 경고 띄워주기
+- [ ] 이미지 크기를 확인하고 저화질로 압축해서 올릴 수 있도록 설정하기
+- [ ] 가끔씩 등록버튼 동작 안하는 문제 원인 파악하기 (새로고침 하면 작동함)
+- [ ] 여러명이 접속했을 떄, 한 명이 이미지 잡고 움직이면 실시간으로 변경내용 공유되게 해보기
+- [ ] Ctrl+C로 이미지 복사하고, Ctrl+V로 이미지 추가하는 기능도 만들어보기
+- [ ] main 으로 돌아가는 버튼 만들기
+#### 3.bulletin
+- [ ] 게시글 검색 및 필터링 기능 추가
+- [ ] 한 화면에 표시할 게시글 개수와 페이지 개수를 가변적으로 지정할 수 있도록 해보기
+- [ ] 이미지 등 멀티미디어 파일 업로드 기능 추가
+- [ ] 대댓글에서 수정 기능 구현하기
+- [ ] 특정 조건에서 발생하는 페이지/댓글 관련 이슈 해결하기
 
----
-## 프로젝트 시작 시점에 계획했던 것
-1. 목표 설정
-   결과물이 비즈니스 완성도 보다는 팀원의 기술적인 능력 향상을 목적으로 함.
-    1. 각 인원이 웹서버와 DB를 연동하여 각각의 테이블에 CRUD를 구현한다.
-    2. 서버와 클라이언트의 차이를 이해하고 데이터 전송 및 처리 과정을 구현한다.
-    3. 팀원 및 학원 학생들의 교재로 쓸 수 있을 정도로 교과서적인 프로젝트를 만들어본다.
-    4. 여러 플랫폼에서 일관적으로 동작하는 웹사이트를 만든다.
-        * 테스트 기기 : 데스크탑,랩탑(win), 아이폰, 아이패드, 맥북, 삼성폰, LG폰
-        * 테스트 환경 : chrome/Edge(windows,mac,ios,adroid), safari(mac,ios)
-2. 업무분담
-    1. 인원
-        - 박원빈 : 조장, 코드 템플릿 제작 및 배포, 반응형, 터치이벤트 처리, 리펙터링, 클라이언트 사이드 코드 구현
-        - 위지은 : 장소공유 및 챗봇 관련 서버사이드 CRUD 구현 (데이터 생성/조회/수정/삭제, 쳇봇 메시지 생성)
-        - 최원호 : 게시판 관련 CRUD 구현 (게시글 생성/조회/수정/삭제, 댓글 생성/조회/수정/삭제)
-        - 이정훈 : 회원관리 관련 CRUD 구현 (회원 가입, 로그인, 비밀번호 변경, 회원탈퇴)
-    2. 개발환경
-        - git 브런치 관리 전략 :
-            1. 개인별로 브런치 사용하여 각자 기능 개발
-            2. 개발한 기능 테스트 후 dev 브런치에 수시로 merge
-            3. dev 브런치에 적용된 내용을 테스트/리펙토링하여 cleaning 브런치에 따로 정리.
-            4. cleaning 브런치에서 발표자료 및 배포버전을 main에 merge.
-        - db 관리
-            1. AWS에 환경설정 후 각자 로컬 db에 스키마 및 더미데이터 클론하기.
-            2. 기능개발은 각자의 로컬 data에서 테스트 데이터 생성/삭제 하며 기능 검증 수행.
-            3. 배포 가능한 상태가 되었을 때, AWS db로 접속정보를 바꾸어 기능 적용.
-3. 개발단계
-    1. 환경설정 (1주차)
-       협업중 충돌 방지 빠르고 안전한 테스트 환경을 만들기 위한 작업.
-        1. 운영환경(AWS) 세팅 및 각자 로컬에 동일한 개발환경 생성
-        2. 데이터 생성 : db 스키마 및 더미데이터 생성 코드 공유.
-        3. 템플릿 생성 : DB연결 및 라우팅 관련 템플릿 생성 및 공유.
-    2. 생성 (1~2주차)
-       처음부터 성능, 추상화, 재사용성 등 고려하면 진척이 안되므로.
-        1. 중복파일과 사사로운 분기처리를 무시하고 코드 생성에 집중
-        2. 기능별로 별도의 router,html,ejs 따로 생성
-        3. 테스트가 가능한 최소한의 상태 만드는 데 집중
-    3. 테스트 (2주차)
-        1. 의도대로 화면이 연결되고 데이터가 흘러가는지 테스트
-        2. 의도하지 않은 분기, 예외처리 및 진입경로 파악
-    4. 피드백 (2~3주차)
-        1. 개발된 기능 중 통합할 수 있는 기능 분류.
-        2. router,html,ejs에서 중복된 패턴을 파악하여 추상화.
-        3. 기능과 역할을 기준으로 폴더구조 재정의
-    5. 리팩토링 (발표 1주전)
-        1. 성능, 효율, 분기처리 등 이슈를 염두하고 구현된 코드 개선.
-        2. 폴더구조와 네이밍 등을 명확하게 수정하여 적용.
-    6. 문서화 (발표 1일전)
-        1. 개발 과정 및 특이사항 기록
