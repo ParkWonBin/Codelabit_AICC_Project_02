@@ -1,24 +1,29 @@
 const express = require('express');
-const chart_bulletinUpdatePostViewByPostIdd = require("../db/chart_bulletinUpdatePostViewByPostId");
+const DBchartData = require("../db/_db_chart_bulletinUpdatePostViewByPostId");
 const router = express.Router();
-router.get('/:post_Id,:views', async (req, res) => {
+router.get('/', async (req, res) => {
+//:post_Id/:views
+    try {
+        // URL의 파라미터에서 post_Id와 views를 가져옵니다.
+        const post_Id = req.params.post_Id;
+        const views = req.params.views;
 
-    // 1. 데이터 가져오기
-    // req.query, req.params, req.body, req.session 등 데이터를 가져옵니다.
-    const chartData = {post_Id, views};
-    const post_Id = req.params.post_Id;
-    const views = req.params.views;
-    // 2. 계산식 사용
-    // DB에서 데이터를 생성/조회/수정/삭제 하거나 화면을 구성하는데 필요한 데이터를 구성합니다.
-    result = await getDataFromDB('조회조건과 관련된 변수')
-    const chart_bulletinUpdatePostViewByPostId = await db_chart_bulletinUpdatePostViewByPostId(chartData);
-    // 3. 응답 지정
-    // 서버에서 클라이언트에게 어떤 화면을 보여줄지 결정합니다.
-    // res.send, res.sendFile, res.render, res.redirect 등 결과화면을 지정합니다.
-    // 응답 예시
-    // res.send("html형식으로 문자열을 만들어 내보냅니다.")
-    // res.sendFile(path.join(__dirname,'/../resources/xxx.html'))
-    res.render('chart',{post_Id,views})
+        // 2. 계산식 사용
+        // DB에서 데이터를 생성/조회/수정/삭제 하거나 화면을 구성하는데 필요한 데이터를 구성합니다.
+        const chartData = await DBchartData(post_Id,views);
+
+        // 3. 응답 지정
+        // 서버에서 클라이언트에게 어떤 화면을 보여줄지 결정합니다.
+        // res.send, res.sendFile, res.render, res.redirect 등 결과 화면을 지정합니다.
+        // 응답 예시
+        // res.send("html형식으로 문자열을 만들어 내보냅니다.")
+        // res.sendFile(path.join(__dirname,'/../resources/xxx.html'))
+        res.render('bulletinBoard', { post_Id, views });
+    } catch (error) {
+        console.error(error);
+        // 오류 처리
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 router.post('/', async (req, res) => {

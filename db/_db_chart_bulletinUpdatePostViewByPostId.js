@@ -23,7 +23,7 @@ const db_chart_bulletinUpdatePostViewByPostId = async (postId) => {
 
         // 2. DB에 어떤 명령을 내릴지 SQL을 작성합니다.
         const sqlString = 'SELECT POST_ID, NVL(VIEWS, 0) AS VIEWS FROM (SELECT POST_ID, VIEWS FROM BULLETIN ORDER BY VIEWS DESC) WHERE ROWNUM <= 5'
-        const chartData = {post_Id,views}
+        const chartData = {}
         const result = await connection.execute(sqlString, chartData);
 
         // 3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.

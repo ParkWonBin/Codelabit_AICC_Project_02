@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>인기상품 실시간 판매량</title>
+  <title>상위 5위 공지사항 조회수</title>
   <!-- Chart.js 라이브러리 추가 -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -14,13 +14,13 @@
 
 <script>
   // 5개의 인기상품 정의
-  const bulletinNum= ['게시글 postid[i]'];
+  let bulletinNum= ['a','b','c','d','e'];
   // 각 상품에 대한 색상 정의
   const colors = ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)'];
 
 
   // 초기 판매량 데이터 생성
-  // const initialData = bulletinNum.map(() => Math.floor(Math.random() * 10));
+  const initialData = bulletinNum.map(() => Math.floor(Math.random() * 10));
 
   // Chart.js를 사용하여 차트 생성
   const ctx = document.getElementById('salesChart').getContext('2d');
@@ -30,7 +30,7 @@
       labels: bulletinNum,
       datasets: [{
         label: '조회수',
-        data: initialData,
+        data:  initialData,
         // backgroundColor: 'rgba(75, 192, 192, 0.2)',
         backgroundColor: colors,
         borderColor: 'gray',
@@ -47,11 +47,11 @@
   });
 
   // 실시간으로 데이터 업데이트하는 함수
-  function updateData() {
-    const newData = salesChart.data.datasets[0].data.map(value => value + Math.floor(Math.random() * 3));
-    salesChart.data.datasets[0].data = newData;
-    salesChart.update(); // 차트 업데이트
-  }
+  // function updateData() {
+  //   const newData = salesChart.data.datasets[0].data.map(value => value + Math.floor(Math.random() * 3));
+  //   salesChart.data.datasets[0].data = newData;
+  //   salesChart.update(); // 차트 업데이트
+  // }
 
   // 2초마다 데이터 업데이트
   setInterval(updateData, 2000);
