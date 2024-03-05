@@ -1,6 +1,14 @@
 ## 코드랩 아카데미 AICC 2차 프로젝트
 
-## 배포  : https://aicc2.wbpark.app
+## 배포  : 
+- 현재 프로젝트 배포 :
+  -  https://aicc2.wbpark.app
+- 이전 프로젝트 경로 : 
+  - https://parkwonbin.github.io/AICC_Proj1/ 
+- 데모 프로젝트 경로 : 
+  - https://parkwonbin.github.io/AICC_Proj2/map/
+  - https://parkwonbin.github.io/AICC_Proj2/demo/
+  - https://parkwonbin.github.io/AICC_Proj2/chart/
 
 ### 인원 및 기여 : 
 - 박원빈 (조장) :
