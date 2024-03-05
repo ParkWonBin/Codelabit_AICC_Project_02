@@ -1,4 +1,7 @@
 ## 코드랩 아카데미 AICC 2차 프로젝트
+
+## 배포  : https://aicc2.wbpark.app
+
 ### 인원 및 기여 : 
 - 박원빈 (조장) :
   -  설계 : 폴더 구조, 변수명 규칙, 함수 인터페이스 정의 구현
@@ -231,10 +234,304 @@ erDiagram
 
 
 ### 6. 테스트 코드
-#### 삭제로직 관련
+
+#### 6.1. user - 회원 가입부터 탈퇴까지
 ![](./_PT/delete_logic.png)
+##### 6.1.1. Test Code
+```js
+// 환경변수 불러오고 출력해보기
+require('dotenv').config({ path: '../.env' })
+console.log("IP : " + process.env.DB_CONNECT_STRING)
+console.log("ID : " + process.env.DB_USER)
+
+// oracledb 환경설정하기
+const oracledb = require('oracledb');
+oracledb.initOracleClient({ libDir: process.env.ORACLEDB_INITORACLECLIENT });
+oracledb.autoCommit = true;
+
+//////////////////////////////////
+const moment = require('moment');
+const db_userCheckMemberExistById = require("../db/db_userCheckMemberExistById");
+const db_userCheckMemberExistByName = require("../db/db_userCheckMemberExistByName");
+const db_userCreateMember = require("../db/db_userCreateMember");
+const db_userUpdateMemberPasword = require("../db/db_userUpdateMemberPasword");
+const db_setDataNull = require("../db/db_util_setDataNull");
+const db_userDeleteMember = require("../db/db_userDeleteMember");
+
+// 무명함수를 이용하여 비동기함수 실행 예시
+(async ()=>{
+
+    const formattedDateTime = moment().format('YYYYMMDD_HHmmss_ms');
+
+    // 아이디 안겹치게 하려고 현재시기 밀리초 단위로 가져와서 id/name 에 넣음.
+    const userName = 'test_'+formattedDateTime
+    const userId = 'test_'+formattedDateTime
+    const userPw = formattedDateTime
+    console.log({id: userId, name: userName, pw: userPw})
+
+    const checkId = await db_userCheckMemberExistById(userId)
+    console.log("id 중복여부 : "+checkId.memberExist)
+
+    const checkName = await db_userCheckMemberExistByName(userName)
+    console.log("name 중복여부 : "+checkName.memberExist)
+
+    const userCreateMember = await db_userCreateMember(userId,userPw,userName)
+    console.table(userCreateMember)
+    console.log(`회원가입 : ${(userCreateMember.succeed)?"성공":"실패"}`)
+
+    // 비밀번호 변경 시도
+    const userPwNew = 'test123'
+    console.log(`비밀번호 변경 시도 : ${userPwNew}`)
+    const userUpdateMemberPasword = await db_userUpdateMemberPasword(userId,userPw, userPwNew)
+    console.table(userUpdateMemberPasword)
+    console.log(`비밀번호 변경 : ${userUpdateMemberPasword.succeed?"성공":"실패"}`)
+
+    //회원탈퇴 전에 댓글,게시글,장소등록 등에 등록했던 데이터를 모두 참조 해제합니다.
+    const relatedData = [
+        {tableName:'comments', columnName:'writer_id'},
+        {tableName:'bulletin', columnName:'writer_id'},
+        {tableName:'hotspot', columnName:'auther_id'}
+    ]
+
+    // 비동기 함수들이 모두 수행될 때까지 기다렸다가 합치는 함수.
+    // 여러개의 비동기 함수를 동시실행 후 리턴값을 수집하려면 promise all
+    console.log('user 테이블을 참조하는 테이블들에서, 해당 레코드의 참조 제거 시도')
+    const deleteDatalog = await Promise.all(
+        relatedData.map(data =>
+            db_setDataNull(data.tableName, data.columnName, userId)
+                .then(result => {
+                    return {...data, id: userId, ...result}
+                })
+        )
+    );
+    console.table(deleteDatalog);
+    
+    // 2.3. 맴버 삭제 시도
+    console.log('맴버 삭제 시도')
+    const userDeleteMember = await db_userDeleteMember(userId,userPwNew)
+    console.table(userDeleteMember);
+    console.log(`회원 삭제 : ${userDeleteMember.succeed?"성공":"실패"}`)
+
+})()
+```
+##### 6.1.2. Test Result
+```js
+IP : localhost:1521
+ID : AICC2
+{                                   
+  id: 'test_20240305_151034_1034',  
+  name: 'test_20240305_151034_1034',
+  pw: '20240305_151034_1034'        
+}                                   
+id 중복여부 : false
+name 중복여부 : false
+┌────────────┬─────────────────────────────┐
+│ (index)    │ Values                      │
+├────────────┼─────────────────────────────┤
+│ succeed    │ true                        │
+│ memberNum  │ 12                          │
+│ memberId   │ 'test_20240305_151034_1034' │
+│ memberName │ 'test_20240305_151034_1034' │
+│ memberRole │ null                        │
+│ error      │ null                        │
+└────────────┴─────────────────────────────┘
+회원가입 : 성공             
+비밀번호 변경 시도 : test123
+┌─────────┬────────┐
+│ (index) │ Values │
+├─────────┼────────┤
+│ succeed │ true   │
+│ error   │ null   │
+└─────────┴────────┘
+비밀번호 변경 : 성공
+user 테이블을 참조하는 테이블들에서, 해당 레코드의 참조 제거 시도
+┌─────────┬────────────┬─────────────┬─────────────────────────────┬─────────┬──────────────┬───────┐
+│ (index) │ tableName  │ columnName  │ id                          │ succeed │ rowsAffected │ error │
+├─────────┼────────────┼─────────────┼─────────────────────────────┼─────────┼──────────────┼───────┤
+│ 0       │ 'comments' │ 'writer_id' │ 'test_20240305_151034_1034' │ true    │ 0            │ null  │
+│ 1       │ 'bulletin' │ 'writer_id' │ 'test_20240305_151034_1034' │ true    │ 0            │ null  │
+│ 2       │ 'hotspot'  │ 'Auther_id' │ 'test_20240305_151034_1034' │ true    │ 0            │ null  │
+└─────────┴────────────┴─────────────┴─────────────────────────────┴─────────┴──────────────┴───────┘
+맴버 삭제 시도
+┌─────────┬────────┐
+│ (index) │ Values │
+├─────────┼────────┤
+│ succeed │ true   │
+│ error   │ null   │
+└─────────┴────────┘
+회원 삭제 : 성공
+
+Process finished with exit code 0
+```
+
+#### 2. map - 이미지 등록부터 삭제까지
+##### 6.1.1. Test Code
+```js
+require('dotenv').config({path: '../.env'})
+console.log("IP : " + process.env.DB_CONNECT_STRING)
+console.log("ID : " + process.env.DB_USER)
+
+// oracledb 환경설정하기
+const oracledb = require('oracledb');
+oracledb.initOracleClient({libDir: process.env.ORACLEDB_INITORACLECLIENT});
+oracledb.autoCommit = true;
+///////////////////////////////////
+
+const path = require("path");
+const imgUploadDir = path.join(__dirname, '../resources/map/images/upload');
+
+const db_mapCreateHotspot = require("../db/db_mapCreateHotspot");
+const db_mapUpdateHotspotPos =  require("../db/db_mapUpdateHotspotPos")
+const db_mapDeleteHotspot  = require('../db/db_mapDeleteHotspot')
+const saveBase64AndReturnFileNameByCurrentTime = require("../util/util_saveBase64AndReturnFileNameByCurrentTime");
+
+// 무명함수를 이용하여 비동기함수 실행 예시
+(async () => {
+    const sportName = 'test'
+    const base64Data = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAVCAIAAABkNkFWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAE9SURBVEhL7ZbbEYQgDEWti4Koh2pohmLc4Ea4hCTq6Dj7secTYnJ4hHFZf5VuVlIMTMw89gZWXTQLC/OymV73b2bjmuXIUwMhlS0EKLleCp6niBBTnoIYEasFu3UvmOUIdZA428FGCDDrI2Z2qYpYhJ5vpwcfm2249wxz7FtUcBPxkx4c2vnR2erB/j3b8MxA7DirlYgWwkTjNK6b2VN9pp8RRNPwdu9BZOKWmX9vmP7RoNYxOvlNM8LsYxIUrfyQmWhClyJftMaQ5ZaZM3WSkqsl5xjVbpnhcY5zVHFnr2XGGlt/zSyVCk9U8Ka1R4oeNB7CWpCn1mpZcBwVrLqq2RfrNmgMq8VlqAzRVt1uNoUMZoTZbzKQUnm9KaONumBWoXZKkVEeH2q3+pBzCkri/Wuc+NloKHWF2c+wrh+XAAnZ7FGq7AAAAABJRU5ErkJggg=='
+    const top = 30
+    const left = 20
+
+    // 2. 이미지 저장 시도
+    const saveFile = saveBase64AndReturnFileNameByCurrentTime(base64Data, imgUploadDir);
+    console.log(`이미지 저장 : ${saveFile.succeed? "성공" : "실패"}`)
+    console.log(`이미지 저장 : ${JSON.stringify(saveFile,null,2)}`)
+
+    // 3. db 등록
+    const CreateHotspot = await db_mapCreateHotspot(saveFile.fileName, sportName, top, left);
+    console.log(`이미지 등록 : ${CreateHotspot.succeed? "성공" : "실패"}`)
+    console.log(`이미지 등록 : ${JSON.stringify(CreateHotspot,null,2)}`)
+
+    // 4. 이미지 이동 시도
+    const NewTop = top + 10
+    const NewLeft = left + 10
+    console.log(`이미지 이동 : spotId${CreateHotspot.spotId} NewTop:${NewTop}, NewLeft:${NewLeft}`)
+    const mapdateHotspotPos = await db_mapUpdateHotspotPos(CreateHotspot.spotId,NewLeft,top);
+    console.log(`이미지 이동 : ${mapdateHotspotPos.succeed? "성공" : "실패"}`)
+    console.log(`이미지 이동 : ${JSON.stringify(CreateHotspot,null,2)}`)
+
+    // 5. 이미지 삭제 시도
+    console.log(`이미지 삭제 : spotId : ${CreateHotspot.spotId}`)
+    const mapDeleteHotspot = await db_mapDeleteHotspot(CreateHotspot.spotId)
+    console.log(`이미지 삭제 : ${mapDeleteHotspot.succeed? "성공" : "실패"}`)
+    console.log(`이미지 이동 : ${JSON.stringify(mapDeleteHotspot,null,2)}`)
+})()
+```
+##### 6.1.2. Test Code
+```js
+IP : localhost:1521
+ID : AICC2
+1709619315213.png 파일 저장 성공!
+이미지 저장 : 성공                
+이미지 저장 : {                   
+  "succeed": true,                
+  "fileName": "1709619315213.png",
+  "error": null                   
+}                                 
+이미지 등록 : 성공
+이미지 등록 : {                             
+  "succeed": true,                          
+  "spotId": 21,                             
+  "error": null                             
+}                                           
+이미지 이동 : spotId21 NewTop:40, NewLeft:30
+이미지 이동 : 성공       
+이미지 이동 : {          
+  "succeed": true,       
+  "spotId": 21,          
+  "error": null          
+}                        
+이미지 삭제 : spotId : 21
+이미지 삭제 : 성공
+이미지 이동 : {
+  "succeed": true,
+  "error": null
+}
+
+Process finished with exit code 0
+```
+
+#### 2. bulletin - 게시글 생성, 수정, 삭제
+##### 6.1.1. Test Code
+```js
+// 환경변수 불러오고 출력해보기
+require('dotenv').config({ path: '../.env' })
+console.log("IP : " + process.env.DB_CONNECT_STRING)
+console.log("ID : " + process.env.DB_USER)
+
+// oracledb 환경설정하기
+const oracledb = require('oracledb');
+oracledb.initOracleClient({ libDir: process.env.ORACLEDB_INITORACLECLIENT });
+oracledb.autoCommit = true;
+///////////////////////////////////
+const db_bulletinCreatePost = require('../db/db_bulletinCreatePost');
+const db_bulletinUpdatePost = require('../db/db_bulletinUpdatePost');
+const db_bulletinDeletePost = require('../db/db_bulletinDeletePost');
+// 무명함수를 이용하여 비동기함수 실행 예시
+(async ()=>{
+    // 글작성에 필요한 데이터
+    const writerId = 'test'
+    const postTitle = '테스트입니다.'
+    const postContent = '아무말 테스트'
+
+    // 글 작성 시도
+    console.log('게시글 작성 시도')
+    const createPost = await db_bulletinCreatePost(writerId, postTitle, postContent)
+    console.log(createPost)
+
+    // 글 수정 시도
+    const postTitleNew = postTitle + " (수정함)"
+    const postContentNew = postContent + " (수정함)"
+
+    console.log("게시글 수정 시도")
+    const updatePost = await db_bulletinUpdatePost(createPost.postId, postTitleNew, postContentNew);
+    console.log(updatePost)
+
+    console.log("게시글 삭제 시도")
+    const deletePost = await db_bulletinDeletePost(createPost.postId)
+    console.log(deletePost)
+})()
+```
+##### 6.1.2. Test Code
+```js
+IP : localhost:1521
+ID : AICC2
+1709619315213.png 파일 저장 성공!
+이미지 저장 : 성공                
+이미지 저장 : {                   
+  "succeed": true,                
+  "fileName": "1709619315213.png",
+  "error": null                   
+}                                 
+이미지 등록 : 성공
+이미지 등록 : {                             
+  "succeed": true,                          
+  "spotId": 21,                             
+  "error": null                             
+}                                           
+이미지 이동 : spotId21 NewTop:40, NewLeft:30
+이미지 이동 : 성공       
+이미지 이동 : {          
+  "succeed": true,       
+  "spotId": 21,          
+  "error": null          
+}                        
+이미지 삭제 : spotId : 21
+이미지 삭제 : 성공
+이미지 이동 : {
+  "succeed": true,
+  "error": null
+}
+
+Process finished with exit code 0
+
+```
 
 ### 7. 개선사항
+
+
+
+
 
 ---
 ## 프로젝트 시작 시점에 계획했던 것
