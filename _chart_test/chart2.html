@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>상위 5위 공지사항 조회수</title>
-  <!-- Chart.js 라이브러리 추가 -->
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -30,7 +30,6 @@
       datasets: [{
         label: '조회수',
         data:  initialData,
-        // backgroundColor: 'rgba(75, 192, 192, 0.2)',
         backgroundColor: colors,
         borderColor: 'gray',
         borderWidth: 1
@@ -45,12 +44,7 @@
     }
   });
 
-  // 실시간으로 데이터 업데이트하는 함수
-  // function updateData() {
-  //   const newData = salesChart.data.datasets[0].data.map(value => value + Math.floor(Math.random() * 3));
-  //   salesChart.data.datasets[0].data = newData;
-  //   salesChart.update(); // 차트 업데이트
-  // }
+
   function updateData() {
     // 이전 데이터 가져오기
     const previousData = salesChart.data.datasets[0].data;
@@ -65,7 +59,7 @@
     salesChart.update();}
 
   // 2초마다 데이터 업데이트
-  setInterval(updateData, 2000);
+  setInterval(updateData, 2500);
 </script>
 </body>
 </html>
