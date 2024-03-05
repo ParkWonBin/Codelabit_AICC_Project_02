@@ -26,6 +26,7 @@ const db_chart_bulletinUpdatePostViewByPostId = async (postId) => {
         const chartData = {}
         const result = await connection.execute(sqlString, chartData);
 
+        console.log(result.rows[0]);
         // 3. DB에서 응답받은 내용을 바탕으로 어떤 값을 return 할 지 결정.
         // 가령 성공 여부 등
         return {

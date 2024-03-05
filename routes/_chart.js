@@ -1,16 +1,15 @@
 const express = require('express');
-const DBchartData = require("../db/_db_chart_bulletinUpdatePostViewByPostId");
+const _db_chart_bulletinUpdatePostViewByPostId = require("../db/_db_chart_bulletinUpdatePostViewByPostId");
 const router = express.Router();
 router.get('/', async (req, res) => {
 //:post_Id/:views
     try {
         // URL의 파라미터에서 post_Id와 views를 가져옵니다.
-        const post_Id = req.params.post_Id;
-        const views = req.params.views;
+        const chartIdViews = await _db_chart_bulletinUpdatePostViewByPostId(post_Id,views);
 
         // 2. 계산식 사용
         // DB에서 데이터를 생성/조회/수정/삭제 하거나 화면을 구성하는데 필요한 데이터를 구성합니다.
-        const chartData = await DBchartData(post_Id,views);
+
 
         // 3. 응답 지정
         // 서버에서 클라이언트에게 어떤 화면을 보여줄지 결정합니다.
