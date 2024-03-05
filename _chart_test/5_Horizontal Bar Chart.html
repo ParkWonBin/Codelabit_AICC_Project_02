@@ -17,7 +17,7 @@
     const ctx = document.getElementById('myChart');
     // const NUMBER_CFG = labels.map(() => Math.floor(Math.random() * 10));
     const DATA_COUNT = 5;
-    const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 15};
+    const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 45};
 
     const labels =  Samples.utils.bulletin({count: 5});
     const data = {
@@ -41,7 +41,7 @@
         ]
     };
 
-    new Chart(ctx,
+    const salesChart = new Chart(ctx,
         {
             type: 'bar',
             data: data,
@@ -100,14 +100,21 @@
         }
     );
 
-    // function updateData() {
-    //     const newData = salesChart.data.datasets[0].data.map(value => value + Math.floor(Math.random() * 3));
-    //     salesChart.data.datasets[0].data = newData;
-    //     salesChart.update(); // 차트 업데이트
-    // }
-    //
-    // // 2초마다 데이터 업데이트
-    // setInterval(updateData, 2000);
+    function updateData() {
+        // 이전 데이터 가져오기
+        const previousData = salesChart.data.datasets[0].data;
+
+        // 새로운 데이터 생성 및 누적
+        const newData = previousData.map(value => value + Math.floor(Math.random() * 2));
+
+        // 차트에 새로운 데이터 설정
+        salesChart.data.datasets[0].data = newData;
+
+        // 차트 업데이트
+        salesChart.update();
+    }
+    // 2초마다 데이터 업데이트
+    setInterval(updateData, 2000);
 
 </script>
 

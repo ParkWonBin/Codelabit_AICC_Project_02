@@ -52,6 +52,20 @@
   //   salesChart.data.datasets[0].data = newData;
   //   salesChart.update(); // 차트 업데이트
   // }
+  function updateData() {
+    // 이전 데이터 가져오기
+    const previousData = salesChart.data.datasets[0].data;
+
+    // 새로운 데이터 생성 및 누적
+    const newData = previousData.map(value => value + Math.floor(Math.random() * 3));
+
+    // 차트에 새로운 데이터 설정
+    salesChart.data.datasets[0].data = newData;
+
+    // 차트 업데이트
+    salesChart.update();}
+
+
 
   // 2초마다 데이터 업데이트
   setInterval(updateData, 2000);
