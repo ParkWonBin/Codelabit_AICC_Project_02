@@ -254,6 +254,9 @@ erDiagram
 
 ### 6. 테스트 코드
 
+![](./_PT/viewJdoc.png)
+
+
 #### 6.1. user - 회원 가입부터 탈퇴까지
 ![](./_PT/delete_logic.png)
 ##### 6.1.1. Test Code
