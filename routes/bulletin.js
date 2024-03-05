@@ -7,9 +7,13 @@ const db_bulletinUpdatePostViewByPostId = require("../db/db_bulletinUpdatePostVi
 const db_bulletinGetPostByPostId = require("../db/db_bulletinGetPostByPostId");
 const db_bulletinGetCommentsByPostId = require("../db/db_bulletinGetCommentsByPostId");
 const db_bulletinCreatePost = require("../db/db_bulletinCreatePost");
-const db_bulletinUpdatePost = require('../db/db_bulletinUpdatePost')
-const db_bulletinDeletePost = require('../db/db_bulletinDeletePost')
-const db_bulletinCreateComments = require('../db/db_bulletinCreateComments')
+const db_bulletinUpdateCommentContentNull = require('../db/db_bulletinUpdateCommentContent');
+const db_bulletinUpdatePost = require('../db/db_bulletinUpdatePost');
+const db_bulletinDeletePost = require('../db/db_bulletinDeletePost');
+const db_bulletinCreateComments = require('../db/db_bulletinCreateComments');
+const db_bulletinDeleteComments = require('../db/db_bulletinDeleteComments')
+const db_bulletinDeleteCommentsByPostId = require('../db/db_bulletinDeleteCommentsByPostId')
+
 // 라우터의 엔드포인트 목록
 // get : http://localhost:3000/bulletin
 // get : http://localhost:3000/bulletin/Detail/:postId
@@ -217,7 +221,7 @@ router.post('/delete/:postId', async (req, res) => {
     }
 
     // 해당 게시글의 댓글을 모두 삭제합니다.
-    // TODO : 해당 게시글 댓글 참조를 모두 비우는 작업 해야함.
+    const delteCommentsByPostId = await db_bulletinDeleteCommentsByPostId(postId)
 
     // 게시글 삭제를 시도합니다.
     const deletePost = await db_bulletinDeletePost(postId);
@@ -242,12 +246,34 @@ router.post('/addComment', async (req, res) => {
 });
 
 // http://localhost:3000/bulletin/deleteComment
-router.post('/deleteComment/:postId/:commentId', async (req, res) => {
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    // 미개발, 폼태그로 어떻게 할지 ...
+router.post('/deleteComment', async (req, res) => {
+    const {postId, commentId, commentWriterId, childrenCount} = req.body
+    console.log({postId, commentId, commentWriterId, childrenCount})
 
-    return res.redirect(`/bulletin/Detail/${postId}?alertMsg=댓글이 삭제되었습니다.`)
+    // 대댓글이 있다면 삭제 안하고 사용자명이랑 내용만 지우도록
+    let result = {succeed:false}
+    if(childrenCount && parseInt(childrenCount) === 0){
+        console.log('대댓글이 없으므로 해당 댓글을 삭제합니다.');
+        result = db_bulletinDeleteComments(postId,commentId,commentWriterId);
+
+    }else {
+        console.log('대댓글이 있으므로 댓글의 내용만 제거합니다.');
+        result = db_bulletinUpdateCommentContentNull(postId,commentId,commentWriterId,'삭제된 댓글입니다.');
+    }
+
+    const alertMsg = result.succeed? "댓글이 삭제되었습니다." : "댓글 삭제에 실패했습니다.";
+    return res.redirect(`/bulletin/Detail/${postId}?alertMsg=${alertMsg}`);
 });
+
+// TODO : 댓글 수정 기능 개발중
+// http://localhost:3000/bulletin/deleteComment
+router.post('/UdateComment', async (req, res) => {
+    const {postId, commentId, commentWriterId} = req.body
+    console.log({postId, commentId, commentWriterId})
+
+    // 대댓글이 없다면 바로 해당 댓글 삭제
+    return res.redirect(`/bulletin/Detail/${postId}?alertMsg=댓글 수정 기능은 아직 개발중입니다.`)
+});
+
 
 module.exports = router;

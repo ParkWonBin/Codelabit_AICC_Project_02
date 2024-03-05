@@ -28,7 +28,24 @@
             <% const renderComments = (comments) => { %>
                 <% comments.forEach(comment => { %>
                     <div class="comment">
-                        <p class="post-author"><strong>@<%= comment.commentId %> : <%= comment.writerName %>(<%= comment.writerId %>)</strong></p>
+                        <div class="post-author">
+                            <strong style="display: inline-block">@<%= comment.commentId %> : <%= comment.writerName %>(<%= comment.writerId %>)</strong>
+                            <% if (userId === comment.writerId) { %>
+                                <form action="/bulletin/UdateComment" method="post" class="commentBtnForm" style="display: inline-block">
+                                    <input type="hidden" name="postId" value="<%= postId %>">
+                                    <input type="hidden" name="commentId" value="<%= comment.commentId %>">
+                                    <input type="hidden" name="commentWriterId" value="<%= comment.writerId %>">
+                                    <input type="submit" value="수정" class="commentUpdateBtn">
+                                </form>
+                            <form action="/bulletin/deleteComment" method="post" class="commentBtnForm" style="display: inline-block">
+                                <input type="hidden" name="postId" value="<%= postId %>">
+                                <input type="hidden" name="commentId" value="<%= comment.commentId %>">
+                                <input type="hidden" name="commentWriterId" value="<%= comment.writerId %>">
+                                <input type="hidden" name="childrenCount" value="<%= comment.children.length %>">
+                                <input type="submit" value="삭제" class="commentDeleteBtn">
+                            </form>
+                        </div>
+                        <% } %>
                         <p><%= comment.content %></p>
                         <% if (comment.children && comment.children.length > 0) { %>
                             <div class="child-comments">
