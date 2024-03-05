@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('../_dbConfig');
+const dbConfig = require('../dbConfig');
 
 /**
  * 해당 테이블의 열에서 데이터가 일치하는 대상을 모두 null 로 변경 성공 여부.

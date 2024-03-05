@@ -3,7 +3,7 @@ require('dotenv').config();
 
 // 세팅된 웹서버 가져오기
 // 파일분리를 빡세게 했기 때문에 참조 보기(어디서 생성된 애인지) : Ctrl+B
-const app = require('./_initSetting')
+const app = require('./initSetting')
 const port = 3000;
 
 // 라우팅 함수를 미들웨어(Middleware)로 처리
