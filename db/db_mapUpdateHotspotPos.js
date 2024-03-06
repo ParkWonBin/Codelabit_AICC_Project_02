@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('../_dbConfig');
+const dbConfig = require('../dbConfig');
 
 /**
  * 오라클 데이터베이스에서 특정 핫스팟의 위치 정보를 업데이트합니다.

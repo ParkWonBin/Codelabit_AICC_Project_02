@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('../_dbConfig');
+const dbConfig = require('../dbConfig');
 
 /**
  * member 테이블에서 member_id와 member_pw가 일치하는 대상을 조회합니다.

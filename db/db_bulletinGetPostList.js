@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('../_dbConfig');
+const dbConfig = require('../dbConfig');
 
 /**
  * @summary 이 함수는 특정 범위 내의 게시글 목록 데이터를 조회합니다. 범위는 시작 행과 종료 행으로 지정됩니다.

@@ -14,7 +14,7 @@ oracledb.autoCommit = true;
 ///////////////////////////////////
 
 // db 정보 가져와서 쿼리 테스트 해보기
-const dbConfig = require('../_dbConfig');
+const dbConfig = require('../dbConfig');
 const sql_test1 = `SELECT COUNT(*) as count FROM member`
 const sql_test2 = `SELECT * FROM member WHERE ROWNUM <= 5`
 
