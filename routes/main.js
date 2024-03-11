@@ -13,7 +13,7 @@
 // 그래서 라우팅 파일 안에서 전체적인 엔드포인트 설정을 하고자했다.
 // a 테그 관련되 엔드포인트는 해당 a테그 만드는 부분의 herf 부분을 참고하고
 // button 관련된 엔드포인트는 해당 render 하는 곳에 action, method 항목을 참고하자.
-// 요약 : 라우팅 endbPoint에 대한 MasterFile 속성으로 현제 문서를 만든다.(의도/이유/목표)였던 것.
+// 요약 : 라우팅 endbPoint에 대한 MasterFile 속성으로 현재 문서를 만든다.(의도/이유/목표)였던 것.
 
 const express = require('express');
 
